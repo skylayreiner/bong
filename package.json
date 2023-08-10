@@ -4,13 +4,14 @@
   "sideEffects": false,
   "scripts": {
     "build": "remix build",
-    "dev": "remix dev -c \"npm run dev:serve\"",
-    "dev:serve": "binode --require ./mocks -- @remix-run/serve:remix-serve ./build",
+    "dev": "remix watch",
+    "dev:serve": "binode --require ./mocks -- @remix-run/serve:remix-serve ./server/build",
     "format": "prettier --write .",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "setup": "prisma generate && prisma migrate deploy && prisma db seed",
-    "start": "remix-serve build",
-    "start:mocks": "binode --require ./mocks -- @remix-run/serve:remix-serve build",
+    "start": "cross-env NODE_ENV=production node server/index.js",
+    "start:dev": "cross-env NODE_ENV=development node server/index.js",
+    "start:mocks": "binode --require ./mocks -- @remix-run/serve:remix-serve server/build",
     "test": "vitest",
     "test:e2e:dev": "start-server-and-test dev http://localhost:3000 \"npx cypress open\"",
     "pretest:e2e:run": "npm run build",
@@ -21,7 +22,7 @@
   "prettier": {},
   "eslintIgnore": [
     "/node_modules",
-    "/build",
+    "/server/build",
     "/public/build"
   ],
   "dependencies": {
@@ -64,6 +65,8 @@
     "prettier": "2.8.8",
     "prettier-plugin-tailwindcss": "^0.3.0",
     "prisma": "^4.16.1",
+    "socket.io": "^4.7.2",
+    "socket.io-client": "^4.7.2",
     "start-server-and-test": "^2.0.0",
     "tailwindcss": "^3.3.2",
     "ts-node": "^10.9.1",

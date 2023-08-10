@@ -1,0 +1,517 @@
+{
+  "inputs": {
+    "empty-module:@remix-run/react": {
+      "bytes": 20,
+      "imports": [],
+      "format": "cjs"
+    },
+    "empty-module:react": { "bytes": 20, "imports": [], "format": "cjs" },
+    "empty-module:react-dom/client": {
+      "bytes": 20,
+      "imports": [],
+      "format": "cjs"
+    },
+    "empty-module:react/jsx-runtime": {
+      "bytes": 20,
+      "imports": [],
+      "format": "cjs"
+    },
+    "app/entry.client.tsx": {
+      "bytes": 271,
+      "imports": [
+        {
+          "path": "empty-module:@remix-run/react",
+          "kind": "import-statement",
+          "original": "@remix-run/react"
+        },
+        {
+          "path": "empty-module:react",
+          "kind": "import-statement",
+          "original": "react"
+        },
+        {
+          "path": "empty-module:react-dom/client",
+          "kind": "import-statement",
+          "original": "react-dom/client"
+        },
+        {
+          "path": "empty-module:react/jsx-runtime",
+          "kind": "import-statement",
+          "original": "react/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "empty-module:@remix-run/css-bundle": {
+      "bytes": 20,
+      "imports": [],
+      "format": "cjs"
+    },
+    "empty-module:@remix-run/node": {
+      "bytes": 20,
+      "imports": [],
+      "format": "cjs"
+    },
+    "empty-module:~/session.server": {
+      "bytes": 20,
+      "imports": [],
+      "format": "cjs"
+    },
+    "app/tailwind.css": { "bytes": 10889, "imports": [] },
+    "app/root.tsx": {
+      "bytes": 1063,
+      "imports": [
+        {
+          "path": "empty-module:@remix-run/css-bundle",
+          "kind": "import-statement",
+          "original": "@remix-run/css-bundle"
+        },
+        {
+          "path": "empty-module:@remix-run/node",
+          "kind": "import-statement",
+          "original": "@remix-run/node"
+        },
+        {
+          "path": "empty-module:@remix-run/react",
+          "kind": "import-statement",
+          "original": "@remix-run/react"
+        },
+        {
+          "path": "empty-module:~/session.server",
+          "kind": "import-statement",
+          "original": "~/session.server"
+        },
+        {
+          "path": "app/tailwind.css",
+          "kind": "import-statement",
+          "original": "~/tailwind.css"
+        },
+        {
+          "path": "empty-module:react/jsx-runtime",
+          "kind": "import-statement",
+          "original": "react/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/tiny-invariant/dist/esm/tiny-invariant.js": {
+      "bytes": 452,
+      "imports": [],
+      "format": "esm"
+    },
+    "empty-module:~/models/note.server": {
+      "bytes": 20,
+      "imports": [],
+      "format": "cjs"
+    },
+    "app/routes/notes.$noteId.tsx": {
+      "bytes": 1836,
+      "imports": [
+        {
+          "path": "empty-module:@remix-run/node",
+          "kind": "import-statement",
+          "original": "@remix-run/node"
+        },
+        {
+          "path": "empty-module:@remix-run/react",
+          "kind": "import-statement",
+          "original": "@remix-run/react"
+        },
+        {
+          "path": "node_modules/tiny-invariant/dist/esm/tiny-invariant.js",
+          "kind": "import-statement",
+          "original": "tiny-invariant"
+        },
+        {
+          "path": "empty-module:~/models/note.server",
+          "kind": "import-statement",
+          "original": "~/models/note.server"
+        },
+        {
+          "path": "empty-module:~/session.server",
+          "kind": "import-statement",
+          "original": "~/session.server"
+        },
+        {
+          "path": "empty-module:react/jsx-runtime",
+          "kind": "import-statement",
+          "original": "react/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "app/routes/notes._index.tsx": {
+      "bytes": 277,
+      "imports": [
+        {
+          "path": "empty-module:@remix-run/react",
+          "kind": "import-statement",
+          "original": "@remix-run/react"
+        },
+        {
+          "path": "empty-module:react/jsx-runtime",
+          "kind": "import-statement",
+          "original": "react/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "empty-module:~/db.server": { "bytes": 20, "imports": [], "format": "cjs" },
+    "app/routes/healthcheck.tsx": {
+      "bytes": 847,
+      "imports": [
+        {
+          "path": "empty-module:~/db.server",
+          "kind": "import-statement",
+          "original": "~/db.server"
+        }
+      ],
+      "format": "esm"
+    },
+    "app/routes/notes.new.tsx": {
+      "bytes": 3134,
+      "imports": [
+        {
+          "path": "empty-module:@remix-run/node",
+          "kind": "import-statement",
+          "original": "@remix-run/node"
+        },
+        {
+          "path": "empty-module:@remix-run/react",
+          "kind": "import-statement",
+          "original": "@remix-run/react"
+        },
+        {
+          "path": "empty-module:react",
+          "kind": "import-statement",
+          "original": "react"
+        },
+        {
+          "path": "empty-module:~/models/note.server",
+          "kind": "import-statement",
+          "original": "~/models/note.server"
+        },
+        {
+          "path": "empty-module:~/session.server",
+          "kind": "import-statement",
+          "original": "~/session.server"
+        },
+        {
+          "path": "empty-module:react/jsx-runtime",
+          "kind": "import-statement",
+          "original": "react/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "empty-module:~/models/user.server": {
+      "bytes": 20,
+      "imports": [],
+      "format": "cjs"
+    },
+    "app/utils.ts": {
+      "bytes": 2291,
+      "imports": [
+        {
+          "path": "empty-module:@remix-run/react",
+          "kind": "import-statement",
+          "original": "@remix-run/react"
+        },
+        {
+          "path": "empty-module:react",
+          "kind": "import-statement",
+          "original": "react"
+        }
+      ],
+      "format": "esm"
+    },
+    "app/routes/_index.tsx": {
+      "bytes": 3410,
+      "imports": [
+        {
+          "path": "empty-module:@remix-run/react",
+          "kind": "import-statement",
+          "original": "@remix-run/react"
+        },
+        {
+          "path": "empty-module:~/models/user.server",
+          "kind": "import-statement",
+          "original": "~/models/user.server"
+        },
+        {
+          "path": "empty-module:~/session.server",
+          "kind": "import-statement",
+          "original": "~/session.server"
+        },
+        {
+          "path": "app/utils.ts",
+          "kind": "import-statement",
+          "original": "~/utils"
+        },
+        {
+          "path": "empty-module:react/jsx-runtime",
+          "kind": "import-statement",
+          "original": "react/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "app/routes/logout.tsx": {
+      "bytes": 264,
+      "imports": [
+        {
+          "path": "empty-module:@remix-run/node",
+          "kind": "import-statement",
+          "original": "@remix-run/node"
+        },
+        {
+          "path": "empty-module:~/session.server",
+          "kind": "import-statement",
+          "original": "~/session.server"
+        }
+      ],
+      "format": "esm"
+    },
+    "app/routes/login.tsx": {
+      "bytes": 5544,
+      "imports": [
+        {
+          "path": "empty-module:@remix-run/node",
+          "kind": "import-statement",
+          "original": "@remix-run/node"
+        },
+        {
+          "path": "empty-module:@remix-run/react",
+          "kind": "import-statement",
+          "original": "@remix-run/react"
+        },
+        {
+          "path": "empty-module:react",
+          "kind": "import-statement",
+          "original": "react"
+        },
+        {
+          "path": "empty-module:~/models/user.server",
+          "kind": "import-statement",
+          "original": "~/models/user.server"
+        },
+        {
+          "path": "empty-module:~/session.server",
+          "kind": "import-statement",
+          "original": "~/session.server"
+        },
+        {
+          "path": "app/utils.ts",
+          "kind": "import-statement",
+          "original": "~/utils"
+        },
+        {
+          "path": "empty-module:react/jsx-runtime",
+          "kind": "import-statement",
+          "original": "react/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "app/routes/notes.tsx": {
+      "bytes": 2129,
+      "imports": [
+        {
+          "path": "empty-module:@remix-run/node",
+          "kind": "import-statement",
+          "original": "@remix-run/node"
+        },
+        {
+          "path": "empty-module:@remix-run/react",
+          "kind": "import-statement",
+          "original": "@remix-run/react"
+        },
+        {
+          "path": "empty-module:~/models/note.server",
+          "kind": "import-statement",
+          "original": "~/models/note.server"
+        },
+        {
+          "path": "empty-module:~/session.server",
+          "kind": "import-statement",
+          "original": "~/session.server"
+        },
+        {
+          "path": "app/utils.ts",
+          "kind": "import-statement",
+          "original": "~/utils"
+        },
+        {
+          "path": "empty-module:react/jsx-runtime",
+          "kind": "import-statement",
+          "original": "react/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "app/routes/join.tsx": {
+      "bytes": 5200,
+      "imports": [
+        {
+          "path": "empty-module:@remix-run/node",
+          "kind": "import-statement",
+          "original": "@remix-run/node"
+        },
+        {
+          "path": "empty-module:@remix-run/react",
+          "kind": "import-statement",
+          "original": "@remix-run/react"
+        },
+        {
+          "path": "empty-module:react",
+          "kind": "import-statement",
+          "original": "react"
+        },
+        {
+          "path": "empty-module:~/models/user.server",
+          "kind": "import-statement",
+          "original": "~/models/user.server"
+        },
+        {
+          "path": "empty-module:~/session.server",
+          "kind": "import-statement",
+          "original": "~/session.server"
+        },
+        {
+          "path": "app/utils.ts",
+          "kind": "import-statement",
+          "original": "~/utils"
+        },
+        {
+          "path": "empty-module:react/jsx-runtime",
+          "kind": "import-statement",
+          "original": "react/jsx-runtime"
+        }
+      ],
+      "format": "esm"
+    },
+    "css-bundle-entry-module:__remix_cssBundleEntryModule__": {
+      "bytes": 551,
+      "imports": [
+        {
+          "path": "app/entry.client.tsx",
+          "kind": "import-statement",
+          "original": "/home/sysreiner/bong/app/entry.client.tsx"
+        },
+        {
+          "path": "app/root.tsx",
+          "kind": "import-statement",
+          "original": "./root.tsx"
+        },
+        {
+          "path": "app/routes/notes.$noteId.tsx",
+          "kind": "import-statement",
+          "original": "./routes/notes.$noteId.tsx"
+        },
+        {
+          "path": "app/routes/notes._index.tsx",
+          "kind": "import-statement",
+          "original": "./routes/notes._index.tsx"
+        },
+        {
+          "path": "app/routes/healthcheck.tsx",
+          "kind": "import-statement",
+          "original": "./routes/healthcheck.tsx"
+        },
+        {
+          "path": "app/routes/notes.new.tsx",
+          "kind": "import-statement",
+          "original": "./routes/notes.new.tsx"
+        },
+        {
+          "path": "app/routes/_index.tsx",
+          "kind": "import-statement",
+          "original": "./routes/_index.tsx"
+        },
+        {
+          "path": "app/routes/logout.tsx",
+          "kind": "import-statement",
+          "original": "./routes/logout.tsx"
+        },
+        {
+          "path": "app/routes/login.tsx",
+          "kind": "import-statement",
+          "original": "./routes/login.tsx"
+        },
+        {
+          "path": "app/routes/notes.tsx",
+          "kind": "import-statement",
+          "original": "./routes/notes.tsx"
+        },
+        {
+          "path": "app/routes/join.tsx",
+          "kind": "import-statement",
+          "original": "./routes/join.tsx"
+        }
+      ],
+      "format": "esm"
+    }
+  },
+  "outputs": {
+    "public/build/_assets/tailwind-NM6HDHC7.css": {
+      "imports": [],
+      "exports": [],
+      "inputs": { "app/tailwind.css": { "bytesInOutput": 10889 } },
+      "bytes": 10889
+    },
+    "public/build/css-bundle-KRDU4BYY.js": {
+      "imports": [
+        {
+          "path": "public/build/_assets/tailwind-NM6HDHC7.css",
+          "kind": "file-loader"
+        }
+      ],
+      "exports": [
+        "entryClient",
+        "route0",
+        "route1",
+        "route2",
+        "route3",
+        "route4",
+        "route5",
+        "route6",
+        "route7",
+        "route8",
+        "route9"
+      ],
+      "entryPoint": "css-bundle-entry-module:__remix_cssBundleEntryModule__",
+      "inputs": {
+        "empty-module:@remix-run/react": { "bytesInOutput": 34 },
+        "empty-module:react": { "bytesInOutput": 34 },
+        "empty-module:react-dom/client": { "bytesInOutput": 35 },
+        "empty-module:react/jsx-runtime": { "bytesInOutput": 34 },
+        "empty-module:@remix-run/css-bundle": { "bytesInOutput": 35 },
+        "empty-module:@remix-run/node": { "bytesInOutput": 34 },
+        "empty-module:~/session.server": { "bytesInOutput": 34 },
+        "empty-module:~/models/note.server": { "bytesInOutput": 34 },
+        "empty-module:~/db.server": { "bytesInOutput": 35 },
+        "empty-module:~/models/user.server": { "bytesInOutput": 34 },
+        "app/entry.client.tsx": { "bytesInOutput": 172 },
+        "css-bundle-entry-module:__remix_cssBundleEntryModule__": {
+          "bytesInOutput": 0
+        },
+        "app/root.tsx": { "bytesInOutput": 723 },
+        "app/tailwind.css": { "bytesInOutput": 46 },
+        "app/routes/notes.$noteId.tsx": { "bytesInOutput": 1321 },
+        "node_modules/tiny-invariant/dist/esm/tiny-invariant.js": {
+          "bytesInOutput": 171
+        },
+        "app/routes/notes._index.tsx": { "bytesInOutput": 255 },
+        "app/routes/healthcheck.tsx": { "bytesInOutput": 436 },
+        "app/routes/notes.new.tsx": { "bytesInOutput": 2259 },
+        "app/routes/_index.tsx": { "bytesInOutput": 2290 },
+        "app/utils.ts": { "bytesInOutput": 622 },
+        "app/routes/logout.tsx": { "bytesInOutput": 143 },
+        "app/routes/login.tsx": { "bytesInOutput": 3522 },
+        "app/routes/notes.tsx": { "bytesInOutput": 1463 },
+        "app/routes/join.tsx": { "bytesInOutput": 3293 }
+      },
+      "bytes": 17803
+    }
+  }
+}

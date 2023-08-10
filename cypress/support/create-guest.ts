@@ -1,26 +1,19 @@
-// Use this to create a new user and login with that user
+// Use this to create a new guest user and login with that guest user
 // Simply call this with:
-// npx ts-node --require tsconfig-paths/register ./cypress/support/create-user.ts username@example.com
+// npx ts-node --require tsconfig-paths/register ./cypress/support/create-guest.ts
 // and it will log out the cookie value you can use to interact with the server
 // as that new user.
 
 import { installGlobals } from "@remix-run/node";
 import { parse } from "cookie";
 
-import { createUser } from "~/models/user.server";
+import { createUserAsGuest } from "~/models/user.server";
 import { createUserSession } from "~/session.server";
 
 installGlobals();
 
-async function createAndLogin(username: string) {
-  if (!username) {
-    throw new Error("username required for login");
-  }
-  if (!username.endsWith("@example.com")) {
-    throw new Error("All test usernames must end in @example.com");
-  }
-
-  const user = await createUser(username, "myreallystrongpassword");
+async function createAndLogin() {
+  const user = await createUserAsGuest();
 
   const response = await createUserSession({
     request: new Request("test://test"),
@@ -45,4 +38,4 @@ async function createAndLogin(username: string) {
   );
 }
 
-createAndLogin(process.argv[2]);
+createAndLogin();
