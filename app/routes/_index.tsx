@@ -1,52 +1,69 @@
-import type { V2_MetaFunction } from "@remix-run/node";
-import { Link } from "@remix-run/react";
-
+import type { V2_MetaFunction, ActionArgs } from "@remix-run/node";
+import { useSubmit, Link } from "@remix-run/react";
+import { createUserAsGuest } from "~/models/user.server";
+import { createUserSession } from "~/session.server";
 import { useOptionalUser } from "~/utils";
 
 export const meta: V2_MetaFunction = () => [{ title: "Remix Notes" }];
 
+export const action = async ({ request }: ActionArgs) => {
+  const user = await createUserAsGuest();
+
+  return createUserSession({
+    redirectTo: "/",
+    remember: false,
+    request,
+    userId: user.id,
+  });
+};
+
 export default function Index() {
   const user = useOptionalUser();
+  const submit = useSubmit();
+
+  function handleRegisterAsGuest() {
+    submit(null, { method: "post", action: "/?index" });
+  }
+
   return (
     <main className="relative min-h-screen bg-primary-green-6 sm:flex sm:items-center sm:justify-center">
       <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-
-        <div className="p-4 absolute z-20 top-0 inset-0 flex justify-center items-center overflow-hidden bg-theme-base-green">
-          <div className="h-full flex flex-col text-theme-base-black font-sans items-center justify-center m-10">
-            <div className="w-[min(80vh,_120vw)] lg:w-[65vh] lg:h-[65vh] h-[min(80vh,_120vw)] bg-primary-white rounded-full lg:pt-5 pt-1">
-              <div className="h-full flex flex-col items-center justify-center">
+        <div className="bg-theme-base-green absolute inset-0 top-0 z-20 flex items-center justify-center overflow-hidden p-4">
+          <div className="text-theme-base-black m-10 flex h-full flex-col items-center justify-center font-sans">
+            <div className="h-[min(80vh,_120vw)] w-[min(80vh,_120vw)] rounded-full bg-primary-white pt-1 lg:h-[65vh] lg:w-[65vh] lg:pt-5">
+              <div className="flex h-full flex-col items-center justify-center">
                 <img
                   src="/img/brand/game-title.png"
-                  className="h-auto w-full ml-[8%] mt-8"
+                  className="ml-[8%] mt-8 h-auto w-full"
                   alt="brand"
                 />
                 {user ? (
                   <Link
                     to="/notes"
-                    className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-yellow-700 shadow-sm hover:bg-yellow-50 sm:px-8"
+                    className="shadow-sm flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-yellow-700 hover:bg-yellow-50 sm:px-8"
                   >
-                    View Notes for {user.email}
+                    View Notes for {user.username}
                   </Link>
                 ) : (
-                  <div className="flex flex-col w-[70%] space-y-1 lg:space-y-1.5 mb-1 text-center">
+                  <div className="mb-1 flex w-[70%] flex-col space-y-1 text-center lg:space-y-1.5">
                     <button
                       type="submit"
-                      onClick={() => console.log("guest click")}
-                      className="flex-grow py-1 text-sm lg:text-md bg-secondary-gray-6 shadow-primary active:bg-secondary-gray-8 active:shadow-transparent active:text-secondary-gray-6"
+                      name="guest-register-btn"
+                      onClick={handleRegisterAsGuest}
+                      className="lg:text-md flex-grow bg-secondary-gray-6 py-1 text-sm shadow-primary active:bg-secondary-gray-8 active:text-secondary-gray-6 active:shadow-transparent"
                     >
                       Play as guest
                     </button>
                     <div className="flex space-x-1">
-
                       <Link
                         to="/join"
-                        className="w-1/2 text-sm py-1 lg:text-md bg-secondary-gray-6  shadow-primary active:bg-secondary-gray-8 active:shadow-transparent active:text-secondary-gray-6"
+                        className="lg:text-md w-1/2 bg-secondary-gray-6 py-1 text-sm  shadow-primary active:bg-secondary-gray-8 active:text-secondary-gray-6 active:shadow-transparent"
                       >
                         Sign up
                       </Link>
                       <Link
                         to="/login"
-                        className="w-1/2 text-sm py-1 lg:text-md bg-secondary-gray-6 shadow-primary active:bg-secondary-gray-8 active:shadow-transparent active:text-secondary-gray-6"
+                        className="lg:text-md w-1/2 bg-secondary-gray-6 py-1 text-sm shadow-primary active:bg-secondary-gray-8 active:text-secondary-gray-6 active:shadow-transparent"
                       >
                         Log In
                       </Link>
@@ -57,9 +74,7 @@ export default function Index() {
             </div>
           </div>
         </div>
-
-
       </div>
-    </main >
+    </main>
   );
 }
