@@ -1,3 +1,19 @@
+/**
+ *   Showstopper features for smoke testing:
+ *
+ *      If a user can't...
+ *
+ *          - register as account user and login
+ *          - register as guest user and login
+ *
+ *          - create a new match and register and join lobby
+ *          - register to a existing match and join lobby
+ *          - unregister from match and leave lobby
+ *
+ *      ...then app requirements are not met
+ *
+ */
+
 describe("smoke tests", () => {
   afterEach(() => {
     cy.cleanupUser();
@@ -10,8 +26,10 @@ describe("smoke tests", () => {
 
     cy.then(() => ({})).as("user");
 
-    // TODO: Replace this with login validation logic
-    cy.findByRole("link", { name: /notes/i }).click();
+    // By logging-in matchmaking should be available
+
+    cy.findByRole("button", { name: /create/i }).click();
+    // cy.findByRole("button", { name: /Join with key/i }).click();
   });
 
   /**

@@ -1,5 +1,6 @@
 import type { V2_MetaFunction, ActionArgs } from "@remix-run/node";
-import { useSubmit, Link } from "@remix-run/react";
+import { useSubmit, Link, useNavigate } from "@remix-run/react";
+import { useEffect } from "react";
 import { createUserAsGuest } from "~/models/user.server";
 import { createUserSession } from "~/session.server";
 import { useOptionalUser } from "~/utils";
@@ -20,10 +21,16 @@ export const action = async ({ request }: ActionArgs) => {
 export default function Index() {
   const user = useOptionalUser();
   const submit = useSubmit();
-
+  const navigate = useNavigate();
   function handleRegisterAsGuest() {
     submit(null, { method: "post", action: "/?index" });
   }
+
+  useEffect(() => {
+    if (user) {
+      navigate("./home");
+    }
+  }, [navigate, user]);
 
   return (
     <main className="relative min-h-screen bg-primary-green-6 sm:flex sm:items-center sm:justify-center">
