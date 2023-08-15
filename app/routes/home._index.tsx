@@ -1,4 +1,3 @@
-import { Link } from "@remix-run/react";
 import CreateModal from "~/components/create-modal";
 
 export default function Home() {
@@ -14,7 +13,6 @@ export default function Home() {
                 <img src="/img/icon/cogs.svg" alt="cog" />
               </Link>
             </div> */}
-
         <div className="h-[min(80vh,_120vw)] w-[min(80vh,_120vw)] rounded-full bg-primary-white pt-1 lg:h-[65vh] lg:w-[65vh] lg:pt-5">
           <div className="flex h-full flex-col items-center justify-center">
             <div className="flex h-full flex-col items-center justify-center">
