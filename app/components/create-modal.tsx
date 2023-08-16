@@ -1,6 +1,7 @@
 import { Dialog } from "@headlessui/react";
 import { useState } from "react";
 import { SubmitButton, CancelButton, PrimaryButton } from "./buttons";
+import { Form } from "@remix-run/react";
 
 export default function CreateModal() {
   let [isOpen, setIsOpen] = useState(false);
@@ -31,7 +32,7 @@ export default function CreateModal() {
                 Room Settings
               </Dialog.Title>
 
-              <div className="mx-auto flex w-5/6 flex-col space-y-3 py-2.5">
+              <Form id="create-match-form" className="mx-auto flex w-5/6 flex-col space-y-3 py-2.5">
                 <span>
                   <label htmlFor="seat-count-select">Seats:</label>
                   <select
@@ -39,7 +40,7 @@ export default function CreateModal() {
                     typeof="number"
                     id="seat-count-select"
                     name="seat-count-select"
-                    className="mx-2 bg-secondary-gray-3 focus:bg-secondary-gray-6 focus:font-medium"
+                    className="mx-2 bg-secondary-gray-6 focus:bg-secondary-gray-8 focus:font-medium"
                   >
                     <option value={4}>4</option>
                     <option value={3}>3</option>
@@ -51,7 +52,7 @@ export default function CreateModal() {
                   <select
                     id="round-count-select"
                     name="round-count-select"
-                    className="mx-2 bg-secondary-gray-3 focus:bg-secondary-gray-6 focus:font-medium"
+                    className="mx-2 bg-secondary-gray-6 focus:bg-secondary-gray-8 focus:font-medium"
                   >
                     {Array.from({ length: 10 }, (_, idx) => 20 - idx).map(
                       (count) => (
@@ -62,9 +63,9 @@ export default function CreateModal() {
                     )}
                   </select>
                 </span>
-              </div>
+              </Form>
               <div className="mx-auto flex w-5/6 space-x-2 text-center">
-                <SubmitButton isProcessing={true} />
+                <SubmitButton formId="create-match-form" isProcessing={true} />
                 <CancelButton handleClick={handleCloseClick} />
               </div>
             </Dialog.Panel>

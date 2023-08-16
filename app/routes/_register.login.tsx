@@ -1,6 +1,7 @@
 import { Dialog } from "@headlessui/react";
-import { useNavigate } from "@remix-run/react";
-import React, { useState } from "react";
+import { Form, useFetcher, useNavigate } from "@remix-run/react";
+import type { FormEvent } from "react";
+import React, { useEffect, useState } from "react";
 import { SubmitButton, CancelButton } from "~/components/buttons";
 
 export default function Login() {
@@ -29,10 +30,9 @@ export default function Login() {
               <Dialog.Title className="font-primary-black text-center text-3xl font-medium underline underline-offset-2">
                 Login
               </Dialog.Title>
-
-              <div className="mx-auto flex w-5/6 flex-col space-y-3 py-2.5"></div>
+              <LoginForm />
               <div className="mx-auto flex w-5/6 space-x-2 text-center">
-                <SubmitButton isProcessing={true} />
+                <SubmitButton formId="login-form" isProcessing={true} />
                 <CancelButton handleClick={handleCloseClick} />
               </div>
             </Dialog.Panel>
@@ -41,4 +41,38 @@ export default function Login() {
       )}
     </>
   );
+}
+
+function LoginForm() {
+  const fetcher = useFetcher();
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (fetcher.data) {
+      const { data } = fetcher.data;
+      setError(data.errorMsg ?? '');
+    }
+  }, [fetcher.data])
+
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault()
+    const form = new FormData(e.target as HTMLFormElement);
+    form.set("registration-type", "login")
+    fetcher.submit(form, { action: "/register", method: "post" });
+  }
+
+  return (
+    <Form id="login-form" className="space-y-2 mx-auto flex flex-col" onSubmit={handleSubmit}>
+      <span>{error}</span>
+      <span className="inline-flex">
+        <label htmlFor="username-input">Username:</label>
+        <input className="container bg-secondary-gray-6 focus:bg-secondary-gray-8 mx-1.5" type="text" id="username-input" name="username" required />
+      </span>
+      <span className="inline-flex">
+        <label htmlFor="password-input">Password:</label>
+        <input className="container bg-secondary-gray-6  focus:bg-secondary-gray-8 mx-1.5" type="text" id="password-input" name="password" required />
+      </span>
+
+    </Form>
+  )
 }

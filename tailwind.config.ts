@@ -20,10 +20,10 @@ export default {
         },
         secondary: {
           gray: {
-            "1": "#faf8f7",
+            "1": "#FAF8F7",
             "3": "#E0DEDF",
             "6": "#C3C1C2",
-            "8": "#7D7D7D",
+            "8": "#575757",
           },
         },
         accent: {
