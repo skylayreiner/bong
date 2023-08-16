@@ -38,26 +38,33 @@ describe("smoke tests", () => {
    *
    **/
 
-  // it("should allow you to register as non-guest user and login" , () => {
-  //   const loginForm = {
-  //     email: `${faker.internet.userName()}@example.com`,
-  //     password: faker.internet.password(),
-  //   };
+  it("should allow you to signup, login, and logout", () => {
+    const signupForm = {
+      username: "test",
+      password: "test-password",
+    };
 
-  //   cy.then(() => ({ email: loginForm.email })).as("user");
+    cy.then(() => ({ username: signupForm.username })).as("user");
 
-  //   cy.visitAndCheck("/");
+    cy.visitAndCheck("/");
 
-  //   cy.findByRole("link", { name: /sign up/i }).click();
+    cy.findByRole("link", { name: /sign up/i }).click();
 
-  //   cy.findByRole("textbox", { name: /email/i }).type(loginForm.email);
-  //   cy.findByLabelText(/password/i).type(loginForm.password);
-  //   cy.findByRole("button", { name: /create account/i }).click();
+    cy.findByRole("textbox", { name: /username/i }).type(signupForm.username);
+    cy.findByRole("textbox", { name: /password/i }).type(signupForm.password);
 
-  //   cy.findByRole("link", { name: /notes/i }).click();
-  //   cy.findByRole("button", { name: /logout/i }).click();
-  //   cy.findByRole("link", { name: /log in/i });
-  // });
+    cy.findByRole("button", {name: /submit/i}).click()
+    cy.findByRole("button", { name: /logout/i }).click();
+    
+    cy.findByRole("button", { name: /logout/i }).click();
+    cy.findByRole("link", { name: /sign up/i }).click();
+    cy.findByRole("button", { name: /cancel/i }).click();
+
+    cy.findByRole("link", { name: /login/i }).click();
+    cy.findByRole("textbox", { name: /username/i }).type(signupForm.username);
+    cy.findByRole("textbox", { name: /password/i }).type(signupForm.password);
+
+  });
 
   //TODO: Replace notes logic with create match logic
 

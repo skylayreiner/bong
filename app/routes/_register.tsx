@@ -42,13 +42,13 @@ export default function Register() {
                     </button>
                     <div className="flex space-x-1.5">
                       <Link
-                        className="lg:text-md active:shadow-none w-1/2 bg-secondary-gray-6 py-1.5 text-sm shadow-primary active:bg-secondary-gray-8 active:text-secondary-gray-6"
+                        className="lg:text-md active:shadow-transparent w-1/2 bg-secondary-gray-6 py-1.5 text-sm shadow-primary active:bg-secondary-gray-8 active:text-secondary-gray-6"
                         to="/signup"
                       >
-                        Signup
+                        Sign up
                       </Link>
                       <Link
-                        className="lg:text-md active:shadow-none w-1/2 bg-secondary-gray-6 py-1.5 text-sm shadow-primary active:bg-secondary-gray-8 active:text-secondary-gray-6"
+                        className="lg:text-md active:shadow-transparent w-1/2 bg-secondary-gray-6 py-1.5 text-sm shadow-primary active:bg-secondary-gray-8 active:text-secondary-gray-6"
                         to="/login"
                       >
                         Login

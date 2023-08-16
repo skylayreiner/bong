@@ -9,7 +9,7 @@ export function PrimaryButton({
 }) {
   return (
     <button
-      className="lg:text-md active:shadow-none bg-secondary-gray-6 py-2 text-sm shadow-primary active:bg-secondary-gray-8 active:text-secondary-gray-6"
+      className="lg:text-md active:shadow-transparent bg-secondary-gray-6 py-2 text-sm shadow-primary active:bg-secondary-gray-8 active:text-secondary-gray-6"
       onClick={handleClick}
     >
       {children}
@@ -17,9 +17,9 @@ export function PrimaryButton({
   );
 }
 
-export function SubmitButton({ isProcessing }: { isProcessing: boolean }) {
+export function SubmitButton({ isProcessing, formId }: { isProcessing: boolean, formId: string }) {
   return (
-    <button className="active:shadow-none flex-grow bg-secondary-gray-6 py-1 text-sm font-medium tracking-wide text-primary-black shadow-primary active:bg-secondary-gray-8 active:text-secondary-gray-6">
+    <button form={formId} className="active:shadow-transparent flex-grow bg-secondary-gray-6 py-1 text-sm font-medium tracking-wide text-primary-black shadow-primary active:bg-secondary-gray-8 active:text-secondary-gray-6">
       {!isProcessing ? (
         <div className="flex w-full items-center justify-center text-secondary-gray-6">
           <svg
@@ -57,9 +57,37 @@ export function CancelButton({ handleClick }: CancelButtonProps) {
     <button
       type="button"
       onClick={handleClick}
-      className="active:shadow-none flex-grow bg-primary-red-6 py-1 text-sm font-medium tracking-wide text-secondary-gray-1 shadow-primary active:bg-primary-red-8 active:text-primary-red-10"
+      className="active:shadow-transparent flex-grow bg-primary-red-6 py-1 text-sm font-medium tracking-wide text-secondary-gray-1 shadow-primary active:bg-primary-red-8 active:text-primary-red-10"
     >
       Cancel
     </button>
   );
+}
+
+type xButtonProps = {
+  handleClick: () => void
+}
+export function XButton({ handleClick }: xButtonProps) {
+  return (
+    <button
+      className="bg-secondary-gray-6 w-6 h-6 shadow-primary active:bg-secondary-gray-8 active:shadow-none active:text-secondary-gray-6 flex justify-center items-center"
+      onClick={handleClick}
+      type="button"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        strokeWidth={1.5}
+        stroke="currentColor"
+        className="w-6 h-6"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M6 18L18 6M6 6l12 12"
+        />
+      </svg>
+    </button>
+  )
 }
