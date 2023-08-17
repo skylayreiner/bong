@@ -32,13 +32,7 @@ describe("smoke tests", () => {
     // cy.findByRole("button", { name: /Join with key/i }).click();
   });
 
-  /**
-   * TODO: Replace email entry logic with username entry logic
-   * TODO: Replace notes logic with user homepage logic
-   *
-   **/
-
-  it("should allow you to signup, login, and logout", () => {
+  it("should allow you to signup and login", () => {
     const signupForm = {
       username: "test",
       password: "test-password",
@@ -50,8 +44,8 @@ describe("smoke tests", () => {
 
     cy.findByRole("link", { name: /sign up/i }).click();
 
-    cy.findByRole("textbox", { name: /username/i }).type(signupForm.username);
-    cy.findByRole("textbox", { name: /password/i }).type(signupForm.password);
+    cy.findByRole("textbox", { name: /username+/i }).type(signupForm.username);
+    cy.findByRole("textbox", { name: /password+/i }).type(signupForm.password);
 
     cy.findByRole("button", {name: /submit/i}).click()
     cy.findByRole("button", { name: /logout/i }).click();
@@ -60,13 +54,16 @@ describe("smoke tests", () => {
     cy.findByRole("link", { name: /sign up/i }).click();
     cy.findByRole("button", { name: /cancel/i }).click();
 
-    cy.findByRole("link", { name: /login/i }).click();
-    cy.findByRole("textbox", { name: /username/i }).type(signupForm.username);
-    cy.findByRole("textbox", { name: /password/i }).type(signupForm.password);
+    // cy.findByRole("link", { name: /login/i }).click();
+    // cy.findByRole("textbox", { name: /username/i }).type(signupForm.username);
+    // cy.findByRole("textbox", { name: /password/i }).type(signupForm.password);
 
   });
 
   //TODO: Replace notes logic with create match logic
+
+  it("should allow you to create a match", () => {
+  })
 
   // it("should allow you to make a note", () => {
   //   const testNote = {

@@ -13,7 +13,7 @@ export default function Index() {
     if (user) {
       navigate("./home");
     } else {
-      navigate("./?register?index");
+      navigate("./?register");
     }
   }, [navigate, user]);
 
