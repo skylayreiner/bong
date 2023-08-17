@@ -14,13 +14,10 @@ installGlobals();
 
 async function createAndLogin(username: string) {
   if (!username) {
-    throw new Error("username required for login");
-  }
-  if (!username.endsWith("@example.com")) {
-    throw new Error("All test usernames must end in @example.com");
+    throw new Error("username required for user login");
   }
 
-  const user = await createUser(username, "myreallystrongpassword");
+  const user = await createUser(username, "fake-test-password");
 
   const response = await createUserSession({
     request: new Request("test://test"),

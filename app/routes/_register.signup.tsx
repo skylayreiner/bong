@@ -74,12 +74,12 @@ function SignupForm() {
     <Form className="space-y-2 mx-auto flex flex-col" id="signup-form" onSubmit={handleSubmit}>
       <span>{error}</span>
       <span className="inline-flex">
-        <label htmlFor="username-input">Username:</label>
-        <input className="container bg-secondary-gray-6 focus:bg-secondary-gray-8 mx-1.5" type="text" id="username-input" name="username" required />
+        <label htmlFor="username">Username:</label>
+        <input className="container bg-secondary-gray-6 focus:bg-secondary-gray-8 mx-1.5" type="text" id="username" name="username" required />
       </span>
       <span className="inline-flex">
-        <label htmlFor="password-input">Password:</label>
-        <input className="container bg-secondary-gray-6  focus:bg-secondary-gray-8 mx-1.5" type="text" id="password-input" name="password" required />
+        <label htmlFor="password">Password:</label>
+        <input className="container bg-secondary-gray-6  focus:bg-secondary-gray-8 mx-1.5" type="text" id="password" name="password" required />
       </span>
 
     </Form>
