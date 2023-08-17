@@ -1,4 +1,23 @@
+import type { V2_MetaFunction } from "@remix-run/node";
+import { useNavigate, Outlet } from "@remix-run/react";
+import { useEffect } from "react";
+import { useOptionalUser } from "~/utils";
 
-export default function Register() {
-  return <></>;
+export const meta: V2_MetaFunction = () => [{ title: "Remix Notes" }];
+
+export default function Index() {
+  const user = useOptionalUser();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      navigate("./home");
+    }
+  }, [navigate, user]);
+
+  return (
+    <div>
+      <Outlet />
+    </div>
+  );
 }
