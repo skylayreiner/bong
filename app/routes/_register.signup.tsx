@@ -75,13 +75,12 @@ function SignupForm() {
       <span>{error}</span>
       <span className="inline-flex">
         <label htmlFor="username">Username:</label>
-        <input className="container bg-secondary-gray-6 focus:bg-secondary-gray-8 mx-1.5" type="text" id="username" name="username" required />
+        <input className="container bg-secondary-gray-3 focus:bg-secondary-gray-6 mx-1.5" type="text" id="username" name="username" required />
       </span>
       <span className="inline-flex">
         <label htmlFor="password">Password:</label>
-        <input className="container bg-secondary-gray-6  focus:bg-secondary-gray-8 mx-1.5" type="text" id="password" name="password" required />
+        <input className="container bg-secondary-gray-3  focus:bg-secondary-gray-6 mx-1.5" type="text" id="password" name="password" required />
       </span>
-
     </Form>
   )
 }

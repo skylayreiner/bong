@@ -66,13 +66,12 @@ function LoginForm() {
       <span>{error}</span>
       <span className="inline-flex">
         <label htmlFor="username-input">Username:</label>
-        <input className="container bg-secondary-gray-6 focus:bg-secondary-gray-8 mx-1.5" type="text" id="username-input" name="username" required />
+        <input className="container bg-secondary-gray-3 focus:bg-secondary-gray-6 mx-1.5" type="text" id="username-input" name="username" required />
       </span>
       <span className="inline-flex">
         <label htmlFor="password-input">Password:</label>
-        <input className="container bg-secondary-gray-6  focus:bg-secondary-gray-8 mx-1.5" type="text" id="password-input" name="password" required />
+        <input className="container bg-secondary-gray-3  focus:bg-secondary-gray-6 mx-1.5" type="text" id="password-input" name="password" required />
       </span>
-
     </Form>
   )
 }
