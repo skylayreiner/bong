@@ -2,7 +2,7 @@ import { Dialog } from "@headlessui/react";
 import { Form, useFetcher, useNavigate } from "@remix-run/react";
 import type { FormEvent } from "react";
 import React, { useEffect, useState } from "react";
-import { SubmitButton, CancelButton } from "~/components/buttons";
+import { SubmitButton, CancelButton, XButton } from "~/components/buttons";
 
 export default function Login() {
   let [isOpen, setIsOpen] = useState(true);
@@ -26,11 +26,17 @@ export default function Login() {
             aria-hidden="true"
           />
           <div className="fixed inset-4 flex items-center justify-center">
-            <Dialog.Panel className="mb-[3%] flex w-full max-w-sm flex-col justify-center bg-primary-white p-6 text-sm lg:max-w-md lg:text-lg">
-              <Dialog.Title className="font-primary-black text-center text-3xl font-medium underline underline-offset-2">
+            <Dialog.Panel className="mb-[3%] pb-6 flex w-full max-w-sm flex-col justify-center bg-primary-white text-sm lg:max-w-md lg:text-lg">
+              <span className="flex justify-end p-2">
+                <XButton handleClick={handleCloseClick} />
+              </span>
+
+              <Dialog.Title className="-mt-4 font-primary-black text-center text-2xl font-medium">
                 Login
               </Dialog.Title>
-              <LoginForm />
+              <div className="mx-auto flex w-5/6 flex-col space-y-3 my-2 pb-2.5">
+                <LoginForm />
+              </div>
               <div className="mx-auto flex w-5/6 space-x-2 text-center">
                 <SubmitButton formId="login-form" isProcessing={true} />
                 <CancelButton handleClick={handleCloseClick} />
@@ -72,7 +78,6 @@ function LoginForm() {
         <label htmlFor="password-input">Password:</label>
         <input className="container bg-secondary-gray-6  focus:bg-secondary-gray-8 mx-1.5" type="text" id="password-input" name="password" required />
       </span>
-
     </Form>
   )
 }
