@@ -1,3 +1,4 @@
+import { useNavigation } from "@remix-run/react";
 import type { ReactNode } from "react";
 
 export function PrimaryButton({
@@ -17,10 +18,13 @@ export function PrimaryButton({
   );
 }
 
-export function SubmitButton({ isProcessing, formId }: { isProcessing: boolean, formId: string }) {
+export function SubmitButton({ formId }: { formId: string }) {
+  const navigation = useNavigation();
+
+
   return (
-    <button form={formId} className="active:shadow-transparent flex-grow bg-secondary-gray-6 py-1 text-sm font-medium tracking-wide text-primary-black shadow-primary active:bg-secondary-gray-8 active:text-secondary-gray-6">
-      {!isProcessing ? (
+    <button type="submit" form={formId} className="active:shadow-transparent flex-grow bg-secondary-gray-6 py-1 text-sm font-medium tracking-wide text-primary-black shadow-primary active:bg-secondary-gray-8 active:text-secondary-gray-6">
+      {navigation.state === 'submitting' ? (
         <div className="flex w-full items-center justify-center text-secondary-gray-6">
           <svg
             aria-hidden="true"

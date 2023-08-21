@@ -40,6 +40,31 @@ async function seed() {
     },
   });
 
+  
+
+  const match = await prisma.match.create({
+    data: {
+      rounds: 20,
+      seats: 4,
+      signups: {
+        create: [{
+          registrant: {
+            connect: {
+              id: user.id
+            }
+          }
+        }],
+      }
+    }, include: {
+      signups: {
+        
+      }  
+    }
+  })
+
+ 
+  console.log(match)
+
   console.log(`Database has been seeded. 🌱`);
 }
 
