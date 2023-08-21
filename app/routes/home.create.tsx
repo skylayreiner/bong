@@ -1,8 +1,24 @@
 import { Dialog } from "@headlessui/react";
+import type { ActionArgs } from "@remix-run/node";
 import { Form, useFetcher, useNavigate } from "@remix-run/react";
 import type { FormEvent } from "react";
 import { useEffect, useState } from "react";
 import { SubmitButton, CancelButton, CloseButton } from "~/components/buttons";
+import { createMatch } from "~/models/match.server";
+import { requireUser, updateUserSessionMatchId } from "~/session.server";
+
+export const action = async ({ request }: ActionArgs) => {
+  const user = await requireUser(request);
+  const formData = await request.formData();
+  const seats = Number(formData.get("seat-count"));
+  const rounds = Number(formData.get("round-count"));
+  if (!seats || !rounds) {
+    return { error: 'Data entry errors @ match settings config' }
+  }
+  const match = await createMatch(seats, rounds, user.id)
+  if (!match || !match.id) return { error: 'Create match failure' }
+  return updateUserSessionMatchId({ request, matchId: match.id })
+};
 
 export default function Create() {
   const [isOpen, setIsOpen] = useState(true);
@@ -24,22 +40,23 @@ export default function Create() {
         aria-hidden="true"
       />
       <div className="fixed inset-4 flex items-center justify-center">
-        <Dialog.Panel className="mb-[3%] pb-6 flex w-full max-w-sm flex-col justify-center bg-primary-white text-sm lg:max-w-md lg:text-lg">
+        <Dialog.Panel className="mb-[3%] pb-6 flex w-full max-w-sm flex-col bg-primary-white text-sm lg:max-w-md lg:text-lg">
           <span className="flex justify-end p-2">
             <CloseButton handleClick={handleClose} />
           </span>
 
           <Dialog.Title className="-mt-4 font-primary-black text-center text-2xl font-medium">
-            Create
+            Match Settings
           </Dialog.Title>
           <div className="mx-auto flex w-5/6 flex-col space-y-3 my-2 pb-2.5">
             <CreateForm />
           </div>
           <div className="mx-auto flex w-5/6 space-x-2 text-center">
-            <SubmitButton formId="create-form" isProcessing={true} />
+            <SubmitButton formId="create-form" />
             <CancelButton handleClick={handleClose} />
           </div>
         </Dialog.Panel>
+
       </div>
     </Dialog>
   );
@@ -50,30 +67,50 @@ function CreateForm() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (fetcher.data) {
-      const { data } = fetcher.data;
-      setError(data.errorMsg ?? '');
+    if (fetcher.data && fetcher.data['error']) {
+      console.log(fetcher.data)
+      setError(fetcher.data.error)
+
     }
   }, [fetcher.data])
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
     const form = new FormData(e.target as HTMLFormElement);
-    form.set("registration-type", "create")
-    fetcher.submit(form);
+    fetcher.submit(form, { method: "post", action: "." });
   }
 
   return (
-    <Form id="create-form" className="space-y-2 mx-auto flex flex-col" onSubmit={handleSubmit}>
-      <span>{error}</span>
-      <span className="inline-flex">
-        <label htmlFor="username-input">Username:</label>
-        <input className="container bg-secondary-gray-6 focus:bg-secondary-gray-8 mx-1.5" type="text" id="username-input" name="username" required />
-      </span>
-      <span className="inline-flex">
-        <label htmlFor="password-input">Password:</label>
-        <input className="container bg-secondary-gray-6  focus:bg-secondary-gray-8 mx-1.5" type="text" id="password-input" name="password" required />
-      </span>
+    <Form id="create-form" className="space-y-2 mx-2 flex flex-col" onSubmit={handleSubmit}>
+      {error}
+      <div className="container">
+        <label htmlFor="seat-count">Seats:</label>
+        <select
+          defaultValue={4}
+          className="mx-1 bg-secondary-gray-6"
+          typeof="number"
+          id="seat-count"
+          name="seat-count"
+        >
+          <option value={4}>4</option>
+          <option value={3}>3</option>
+          <option value={2}>2</option>
+        </select>
+      </div>
+      <div className="container">
+        <label htmlFor="round-count"># of Rounds:</label>
+        <select
+          defaultValue={20}
+          id="round-count"
+          typeof="number"
+          name="round-count"
+          className="mx-1 bg-secondary-gray-6"
+        >
+          <option value={20}>20</option>
+          <option value={19}>19</option>
+          <option value={18}>18</option>
+        </select>
+      </div>
     </Form>
   )
 }

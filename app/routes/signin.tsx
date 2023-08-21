@@ -8,10 +8,12 @@ export const action = async ({ request }: ActionArgs) => {
   const formData = await request.formData();
   const username = formData.get("username");
   const password = formData.get("password");
-  const formType = formData.get("registration-type")
+  const formType = formData.get("signin-type")
+
   if (username?.length === 0 || typeof username !== "string") {
     return { data: { errorMsg: "Login Error: username is required to login" } }
   }
+
   if (password?.length === 0 || typeof password !== "string") {
     return { data: { errorMsg: "Login Error: password is required to login" } }
   }
@@ -37,11 +39,12 @@ export const action = async ({ request }: ActionArgs) => {
       });
     }
   }
-  return { data: { errorMsg: `Registration Error: An error occured while attempting to ${formType}` } }
+
+  return { data: { errorMsg: `Signin Error: An error occured while attempting to ${formType}` } }
 };
 
 
-export default function Register() {
+export default function Signin() {
   const fetcher = useFetcher();
 
   function handleRegisterAsGuest() {

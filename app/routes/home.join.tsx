@@ -36,7 +36,7 @@ export default function Join() {
             <JoinForm />
           </div>
           <div className="mx-auto flex w-5/6 space-x-2 text-center">
-            <SubmitButton formId="join-form" isProcessing={true} />
+            <SubmitButton formId="join-form" />
             <CancelButton handleClick={handleClose} />
           </div>
         </Dialog.Panel>
@@ -59,7 +59,6 @@ function JoinForm() {
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
     const form = new FormData(e.target as HTMLFormElement);
-    form.set("registration-type", "join")
     fetcher.submit(form);
   }
 
