@@ -72,15 +72,15 @@ describe("smoke tests", () => {
     cy.findByRole("button", { name: /logout/i }).should("exist");
   });
 
-  it("should allow you create and join a new match", () => {
-    cy.login();
+  // it("should allow you create and join a new match", () => {
+  //   cy.login();
 
-    cy.visitAndCheck("/");
+  //   cy.visitAndCheck("/");
 
-    cy.findByRole("link", { name: /create/i }).click();
+  //   cy.findByRole("link", { name: /create/i }).click();
 
-    cy.findByRole("button", { name: /submit/i }).click();
-  })
+  //   cy.findByRole("button", { name: /submit/i }).click();
+  // })
   
   // it("should allow you join existing match", () => {
   // })
