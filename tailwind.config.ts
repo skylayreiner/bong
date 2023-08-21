@@ -40,6 +40,30 @@ export default {
     fontFamily: {
       sans: ["Ubuntu"],
     },
+      gridTemplateColumns: {
+      3: 'repeat(3, minmax(0, 1fr))',
+      5: 'repeat(5, minmax(0, 1fr))',
+      12: 'repeat(12, minmax(0, 1fr))',
+    },
+    gridColumns: {
+      'span-2': ' span 2 / span 2',
+      'span-4': ' span 4 / span 4',
+      'span-8': ' span 8 / span 8',
+      'span-10': ' span 10 / span 10',
+    },
+
+    gridTemplateRows: {
+      3: 'repeat(3, minmax(0, 1fr))',
+      8: 'repeat(8, minmax(0, 1fr))',
+    },
+    gridRow: {
+      'span-6': 'span 6 / span 6',
+      'span-7': 'span 7 / span 7',
+    },
+    gridRowStart: {
+      2: '2',
+      7: '7',
+    },
   },
   plugins: [],
 } satisfies Config;

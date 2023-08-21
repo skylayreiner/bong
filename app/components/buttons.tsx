@@ -9,7 +9,7 @@ export function PrimaryButton({
 }) {
   return (
     <button
-      className="lg:text-md active:shadow-transparent bg-secondary-gray-6 py-2 text-sm shadow-primary active:bg-secondary-gray-8 active:text-secondary-gray-6"
+      className="lg:text-md active:shadow-transparent bg-secondary-gray-6 py-1.5 text-sm shadow-primary active:bg-secondary-gray-8 active:text-secondary-gray-6"
       onClick={handleClick}
     >
       {children}
@@ -64,10 +64,10 @@ export function CancelButton({ handleClick }: CancelButtonProps) {
   );
 }
 
-type xButtonProps = {
+type CloseButtonProps = {
   handleClick: () => void
 }
-export function XButton({ handleClick }: xButtonProps) {
+export function CloseButton({ handleClick }: CloseButtonProps) {
   return (
     <button
       className="bg-secondary-gray-6 w-6 h-6 shadow-primary active:bg-secondary-gray-8 active:shadow-none active:text-secondary-gray-6 flex justify-center items-center"
@@ -87,6 +87,26 @@ export function XButton({ handleClick }: xButtonProps) {
           strokeLinejoin="round"
           d="M6 18L18 6M6 6l12 12"
         />
+      </svg>
+    </button>
+  )
+}
+
+
+type BackButtonProps = {
+  handleClick: () => void
+}
+
+export function BackButton({ handleClick }: BackButtonProps) {
+  return (
+    <button
+      className="bg-secondary-gray-6 w-6 h-6 p-1 shadow-primary active:bg-secondary-gray-8 active:shadow-none active:text-secondary-gray-6 flex justify-center items-center"
+      onClick={handleClick}
+      type="button"
+    >
+
+      <svg width="27" height="28" viewBox="0 0 27 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M13.0592 27.9003L-0.000488281 13.9501L13.0592 0L14.7733 1.83096L4.65203 12.6423H26.1189V15.258H4.65203L14.7733 26.0693L13.0592 27.9003Z" fill="black" />
       </svg>
     </button>
   )
