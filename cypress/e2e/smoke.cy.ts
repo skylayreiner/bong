@@ -28,7 +28,7 @@ describe("smoke tests", () => {
 
     // By logging-in matchmaking should be available
 
-    cy.findByRole("button", { name: /create/i }).click();
+    cy.findByRole("link", { name: /create/i }).click();
     // cy.findByRole("button", { name: /Join with key/i }).click();
   });
 
