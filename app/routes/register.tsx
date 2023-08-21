@@ -1,20 +1,51 @@
-import { useNavigate, Outlet, Link, useFetcher } from "@remix-run/react";
-import { useEffect } from "react";
-import { useOptionalUser } from "~/utils";
+
+import type { ActionArgs } from "@remix-run/node";
+import { Outlet, Link, useFetcher } from "@remix-run/react";
+import { verifyLogin, createUser } from "~/models/user.server";
+import { createUserSession } from "~/session.server";
+
+export const action = async ({ request }: ActionArgs) => {
+  const formData = await request.formData();
+  const username = formData.get("username");
+  const password = formData.get("password");
+  const formType = formData.get("registration-type")
+  if (username?.length === 0 || typeof username !== "string") {
+    return { data: { errorMsg: "Login Error: username is required to login" } }
+  }
+  if (password?.length === 0 || typeof password !== "string") {
+    return { data: { errorMsg: "Login Error: password is required to login" } }
+  }
+
+  if (formType === "login") {
+    const res = await verifyLogin(username, password);
+    if (res && res.id && res.username) {
+      return createUserSession({
+        redirectTo: "/",
+        remember: false,
+        request,
+        userId: res.id,
+      });
+    }
+  } else if (formType === "signup") {
+    const res = await createUser(username, password);
+    if (res && res.username && res.id) {
+      return createUserSession({
+        redirectTo: "/",
+        remember: false,
+        request,
+        userId: res.id,
+      });
+    }
+  }
+  return { data: { errorMsg: `Registration Error: An error occured while attempting to ${formType}` } }
+};
+
 
 export default function Register() {
   const fetcher = useFetcher();
-  const user = useOptionalUser();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (user) {
-      navigate(`/home?${user.username}`);
-    }
-  }, [user, navigate]);
 
   function handleRegisterAsGuest() {
-    fetcher.load("/register");
+    fetcher.load("/guest-login");
   }
 
   return (
@@ -43,13 +74,13 @@ export default function Register() {
                     <div className="flex space-x-1.5">
                       <Link
                         className="lg:text-md active:shadow-transparent w-1/2 bg-secondary-gray-6 py-1.5 text-sm shadow-primary active:bg-secondary-gray-8 active:text-secondary-gray-6"
-                        to="/signup"
+                        to="signup"
                       >
                         Sign up
                       </Link>
                       <Link
                         className="lg:text-md active:shadow-transparent w-1/2 bg-secondary-gray-6 py-1.5 text-sm shadow-primary active:bg-secondary-gray-8 active:text-secondary-gray-6"
-                        to="/login"
+                        to="login"
                       >
                         Login
                       </Link>
