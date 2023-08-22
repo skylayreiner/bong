@@ -26,6 +26,27 @@ export async function createMatch(seats:Match['seats'], rounds:Match['rounds'], 
   return res;
 };
 
+export async function registerMatchParticipant(id: Match["id"], particpantId: User["id"]) {
+  try {
+    const match = await prisma.match.update({
+        data: {
+          signups: {
+            create: {
+              registrant: {
+                connect: {
+                  id: particpantId
+                }
+              }
+            }
+          },
+        }, where: { id }, include: { signups: {}}
+      });
+      return match;
+  } catch (e) {
+    throw new Error("An error occurred registering user to match")
+  }
+}
+
 
 export async function getMatchById(id: Match["id"]) {
   return await prisma.match.findUnique({
@@ -33,8 +54,12 @@ export async function getMatchById(id: Match["id"]) {
   })
 }
 
-
-
+// TODO: This is a placeholder
+export async function getMatchForKey(key: Match["id"]) {
+  return await prisma.match.findUnique({
+    where: { id: key }, include: { signups: {} }
+  });
+}
 
 export async function verifyMatchParticipant(id: Match["id"], particpantId: User["id"]) {
   const match = await prisma.match.findUnique({

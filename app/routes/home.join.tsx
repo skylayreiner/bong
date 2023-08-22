@@ -1,8 +1,29 @@
 import { Dialog } from "@headlessui/react";
+import type { ActionArgs } from "@remix-run/node";
 import { Form, useFetcher, useNavigate } from "@remix-run/react";
-import type { FormEvent } from "react";
+import type { ChangeEvent, FormEvent } from "react";
 import { useEffect, useState } from "react";
 import { SubmitButton, CancelButton, CloseButton } from "~/components/buttons";
+import { getMatchForKey, registerMatchParticipant } from "~/models/match.server";
+import { requireUser, updateUserSessionMatchId } from "~/session.server";
+
+export const action = async ({ request }: ActionArgs) => {
+  const user = await requireUser(request);
+  const formData = await request.formData();
+  const key = formData.get("match-key") as string;
+  if (!key) {
+    return { data: { error: 'Error: Data entry errors @ match key input' } }
+  }
+  const match = await getMatchForKey(key);
+  if (!match || !match.id) {
+    return { data: { error: "Error: No match was found for input key" } }
+  }
+  if (match.signups.length === match.seats) {
+    return { data: { error: "Error: Match w/ input key is full or in progress" } }
+  }
+  await registerMatchParticipant(match.id, user.id);
+  return updateUserSessionMatchId({ request, matchId: match.id })
+};
 
 export default function Join() {
   const [isOpen, setIsOpen] = useState(true);
@@ -48,30 +69,32 @@ export default function Join() {
 function JoinForm() {
   const fetcher = useFetcher();
   const [error, setError] = useState('');
+  const [value, setValue] = useState('');
 
   useEffect(() => {
     if (fetcher.data) {
       const { data } = fetcher.data;
-      setError(data.errorMsg ?? '');
+      setError(data?.error ?? '');
     }
   }, [fetcher.data])
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
     const form = new FormData(e.target as HTMLFormElement);
-    fetcher.submit(form);
+    form.set("match-key", value);
+    fetcher.submit(form, { method: "post", action: "." });
+  }
+
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    setValue(e.target.value)
   }
 
   return (
-    <Form id="join-form" className="space-y-2 mx-auto flex flex-col" onSubmit={handleSubmit}>
+    <Form method="post" id="join-form" className="space-y-2 mx-auto flex flex-col" onSubmit={handleSubmit}>
       <span>{error}</span>
       <span className="inline-flex">
-        <label htmlFor="username-input">Username:</label>
-        <input className="container bg-secondary-gray-6 focus:bg-secondary-gray-8 mx-1.5" type="text" id="username-input" name="username" required />
-      </span>
-      <span className="inline-flex">
-        <label htmlFor="password-input">Password:</label>
-        <input className="container bg-secondary-gray-6  focus:bg-secondary-gray-8 mx-1.5" type="text" id="password-input" name="password" required />
+        <label className="my-1" form="join-form" htmlFor="match-key">Enter match key:</label>
+        <input className="py-1 px-2 text-secondary-gray-8 italic focus:text-primary-black bg-secondary-gray-3 focus:bg-secondary-gray-6 mx-1.5" id="match-key" name="match-key" placeholder={'match-key-to-join'} typeof="text" value={value} onChange={handleChange} required />
       </span>
     </Form>
   )
