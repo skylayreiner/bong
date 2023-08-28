@@ -1,11 +1,11 @@
 import { Dialog } from "@headlessui/react";
-import type { ActionArgs } from "@remix-run/node";
+import { redirect, type ActionArgs } from "@remix-run/node";
 import { Form, useFetcher, useNavigate } from "@remix-run/react";
 import type { FormEvent } from "react";
 import { useEffect, useState } from "react";
 import { SubmitButton, CancelButton, CloseButton } from "~/components/buttons";
 import { createMatch } from "~/models/match.server";
-import { requireUser, updateUserSessionMatchId } from "~/session.server";
+import { requireUser } from "~/session.server";
 
 export const action = async ({ request }: ActionArgs) => {
   const user = await requireUser(request);
@@ -13,11 +13,12 @@ export const action = async ({ request }: ActionArgs) => {
   const seats = Number(formData.get("seat-count"));
   const rounds = Number(formData.get("round-count"));
   if (!seats || !rounds) {
-    return { error: 'Data entry errors @ match settings config' }
+    return { error: "Data entry errors @ match settings config" };
   }
-  const match = await createMatch(seats, rounds, user.id)
-  if (!match || !match.id) return { error: 'Create match failure' }
-  return updateUserSessionMatchId({ request, matchId: match.id })
+  const match = await createMatch(seats, rounds, user.id, "pre");
+  if (!match || !match.id) return { error: "Create match failure" };
+  console.log(match);
+  return redirect(`/match/${match.id}/lobby`);
 };
 
 export default function Create() {
@@ -30,25 +31,21 @@ export default function Create() {
   }
 
   return (
-    <Dialog
-      open={isOpen}
-      onClose={handleClose}
-      className="relative z-50"
-    >
+    <Dialog open={isOpen} onClose={handleClose} className="relative z-50">
       <div
         className="fixed inset-0 flex items-center justify-center p-4 backdrop-brightness-50"
         aria-hidden="true"
       />
       <div className="fixed inset-4 flex items-center justify-center">
-        <Dialog.Panel className="mb-[3%] pb-6 flex w-full max-w-sm flex-col bg-primary-white text-sm lg:max-w-md lg:text-lg">
+        <Dialog.Panel className="mb-[3%] flex w-full max-w-sm flex-col bg-primary-white pb-6 text-sm lg:max-w-md lg:text-lg">
           <span className="flex justify-end p-2">
             <CloseButton handleClick={handleClose} />
           </span>
 
-          <Dialog.Title className="-mt-4 font-primary-black text-center text-2xl font-medium">
+          <Dialog.Title className="font-primary-black -mt-4 text-center text-2xl font-medium">
             Match Settings
           </Dialog.Title>
-          <div className="mx-auto flex w-5/6 flex-col space-y-3 my-2 pb-2.5">
+          <div className="mx-auto my-2 flex w-5/6 flex-col space-y-3 pb-2.5">
             <CreateForm />
           </div>
           <div className="mx-auto flex w-5/6 space-x-2 text-center">
@@ -56,7 +53,6 @@ export default function Create() {
             <CancelButton handleClick={handleClose} />
           </div>
         </Dialog.Panel>
-
       </div>
     </Dialog>
   );
@@ -64,27 +60,30 @@ export default function Create() {
 
 function CreateForm() {
   const fetcher = useFetcher();
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    if (fetcher.data && fetcher.data['error']) {
-      console.log(fetcher.data)
-      setError(fetcher.data.error)
-
+    if (fetcher.data && fetcher.data["error"]) {
+      console.log(fetcher.data);
+      setError(fetcher.data.error);
     }
-  }, [fetcher.data])
+  }, [fetcher.data]);
 
   function handleSubmit(e: FormEvent) {
-    e.preventDefault()
+    e.preventDefault();
     const form = new FormData(e.target as HTMLFormElement);
     fetcher.submit(form, { method: "post", action: "." });
   }
 
   return (
-    <Form id="create-form" className="space-y-2 mx-2 flex flex-col" onSubmit={handleSubmit}>
+    <Form
+      id="create-form"
+      className="mx-2 flex flex-col space-y-2"
+      onSubmit={handleSubmit}
+    >
       {error}
       <div className="container">
-        <label htmlFor="seat-count">Seats:</label>
+        <label htmlFor="seat-count">Max Seats:</label>
         <select
           defaultValue={4}
           className="mx-1 bg-secondary-gray-6"
@@ -112,5 +111,5 @@ function CreateForm() {
         </select>
       </div>
     </Form>
-  )
+  );
 }

@@ -2,24 +2,24 @@
 // Simply call this with:
 // npx ts-node --require tsconfig-paths/register ./cypress/support/create-guest.ts
 // and it will log out the cookie value you can use to interact with the server
-// as that new user.
+// as that guest user.
 
 import { installGlobals } from "@remix-run/node";
 import { parse } from "cookie";
 
-import { createUserAsGuest } from "~/models/user.server";
+import { createGuest } from "~/models/user.server";
 import { createUserSession } from "~/session.server";
 
 installGlobals();
 
 async function createAndLogin() {
-  const user = await createUserAsGuest();
+  const user = await createGuest();
 
   const response = await createUserSession({
     request: new Request("test://test"),
     userId: user.id,
     remember: false,
-    redirectTo: "/",
+    redirectTo: "/"
   });
 
   const cookieValue = response.headers.get("Set-Cookie");

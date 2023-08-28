@@ -3,14 +3,14 @@ import type { ReactNode } from "react";
 
 export function PrimaryButton({
   children,
-  handleClick,
+  handleClick
 }: {
   children: ReactNode;
   handleClick: () => void;
 }) {
   return (
     <button
-      className="lg:text-md active:shadow-transparent bg-secondary-gray-6 py-1.5 text-sm shadow-primary active:bg-secondary-gray-8 active:text-secondary-gray-6"
+      className="lg:text-md bg-secondary-gray-6 py-1.5 text-sm shadow-primary active:bg-secondary-gray-8 active:text-secondary-gray-6 active:shadow-transparent"
       onClick={handleClick}
     >
       {children}
@@ -21,10 +21,13 @@ export function PrimaryButton({
 export function SubmitButton({ formId }: { formId: string }) {
   const navigation = useNavigation();
 
-
   return (
-    <button type="submit" form={formId} className="active:shadow-transparent flex-grow bg-secondary-gray-6 py-1 text-sm font-medium tracking-wide text-primary-black shadow-primary active:bg-secondary-gray-8 active:text-secondary-gray-6">
-      {navigation.state === 'submitting' ? (
+    <button
+      type="submit"
+      form={formId}
+      className="flex-grow bg-secondary-gray-6 py-1 text-sm font-medium tracking-wide text-primary-black shadow-primary active:bg-secondary-gray-8 active:text-secondary-gray-6 active:shadow-transparent"
+    >
+      {navigation.state === "submitting" ? (
         <div className="flex w-full items-center justify-center text-secondary-gray-6">
           <svg
             aria-hidden="true"
@@ -61,7 +64,7 @@ export function CancelButton({ handleClick }: CancelButtonProps) {
     <button
       type="button"
       onClick={handleClick}
-      className="active:shadow-transparent flex-grow bg-primary-red-6 py-1 text-sm font-medium tracking-wide text-secondary-gray-1 shadow-primary active:bg-primary-red-8 active:text-primary-red-10"
+      className="flex-grow bg-primary-red-6 py-1 text-sm font-medium tracking-wide text-secondary-gray-1 shadow-primary active:bg-primary-red-8 active:text-primary-red-10 active:shadow-transparent"
     >
       Cancel
     </button>
@@ -69,12 +72,12 @@ export function CancelButton({ handleClick }: CancelButtonProps) {
 }
 
 type CloseButtonProps = {
-  handleClick: () => void
-}
+  handleClick: () => void;
+};
 export function CloseButton({ handleClick }: CloseButtonProps) {
   return (
     <button
-      className="bg-secondary-gray-6 w-6 h-6 shadow-primary active:bg-secondary-gray-8 active:shadow-none active:text-secondary-gray-6 flex justify-center items-center"
+      className="active:shadow-none flex h-6 w-6 items-center justify-center bg-secondary-gray-6 shadow-primary active:bg-secondary-gray-8 active:text-secondary-gray-6"
       onClick={handleClick}
       type="button"
     >
@@ -84,7 +87,7 @@ export function CloseButton({ handleClick }: CloseButtonProps) {
         viewBox="0 0 24 24"
         strokeWidth={1.5}
         stroke="currentColor"
-        className="w-6 h-6"
+        className="h-6 w-6"
       >
         <path
           strokeLinecap="round"
@@ -93,25 +96,32 @@ export function CloseButton({ handleClick }: CloseButtonProps) {
         />
       </svg>
     </button>
-  )
+  );
 }
-
 
 type BackButtonProps = {
-  handleClick: () => void
-}
+  handleClick: () => void;
+};
 
 export function BackButton({ handleClick }: BackButtonProps) {
   return (
     <button
-      className="bg-secondary-gray-6 w-6 h-6 p-1 shadow-primary active:bg-secondary-gray-8 active:shadow-none active:text-secondary-gray-6 flex justify-center items-center"
+      className="active:shadow-none flex h-6 w-6 items-center justify-center bg-secondary-gray-6 p-1 shadow-primary active:bg-secondary-gray-8 active:text-secondary-gray-6"
       onClick={handleClick}
       type="button"
     >
-
-      <svg width="27" height="28" viewBox="0 0 27 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M13.0592 27.9003L-0.000488281 13.9501L13.0592 0L14.7733 1.83096L4.65203 12.6423H26.1189V15.258H4.65203L14.7733 26.0693L13.0592 27.9003Z" fill="black" />
+      <svg
+        width="27"
+        height="28"
+        viewBox="0 0 27 28"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M13.0592 27.9003L-0.000488281 13.9501L13.0592 0L14.7733 1.83096L4.65203 12.6423H26.1189V15.258H4.65203L14.7733 26.0693L13.0592 27.9003Z"
+          fill="black"
+        />
       </svg>
     </button>
-  )
+  );
 }

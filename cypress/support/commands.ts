@@ -68,7 +68,7 @@ function guestLogin() {
 }
 
 function login({
-  username = faker.internet.userName(),
+  username = faker.internet.userName()
 }: {
   username?: string;
 } = {}) {

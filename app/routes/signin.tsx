@@ -1,4 +1,3 @@
-
 import type { ActionArgs } from "@remix-run/node";
 import { Outlet, Link, useFetcher } from "@remix-run/react";
 import { verifyLogin, createUser } from "~/models/user.server";
@@ -8,14 +7,14 @@ export const action = async ({ request }: ActionArgs) => {
   const formData = await request.formData();
   const username = formData.get("username");
   const password = formData.get("password");
-  const formType = formData.get("signin-type")
+  const formType = formData.get("signin-type");
 
   if (username?.length === 0 || typeof username !== "string") {
-    return { data: { errorMsg: "Login Error: username is required to login" } }
+    return { data: { errorMsg: "Login Error: username is required to login" } };
   }
 
   if (password?.length === 0 || typeof password !== "string") {
-    return { data: { errorMsg: "Login Error: password is required to login" } }
+    return { data: { errorMsg: "Login Error: password is required to login" } };
   }
 
   if (formType === "login") {
@@ -25,7 +24,7 @@ export const action = async ({ request }: ActionArgs) => {
         redirectTo: "/",
         remember: false,
         request,
-        userId: res.id,
+        userId: res.id
       });
     }
   } else if (formType === "signup") {
@@ -35,19 +34,22 @@ export const action = async ({ request }: ActionArgs) => {
         redirectTo: "/",
         remember: false,
         request,
-        userId: res.id,
+        userId: res.id
       });
     }
   }
 
-  return { data: { errorMsg: `Signin Error: An error occured while attempting to ${formType}` } }
+  return {
+    data: {
+      errorMsg: `Signin Error: An error occured while attempting to ${formType}`
+    }
+  };
 };
-
 
 export default function Signin() {
   const fetcher = useFetcher();
 
-  function handleRegisterAsGuest() {
+  function handleGuestRegister() {
     fetcher.load("/guest-login");
   }
 
@@ -69,20 +71,20 @@ export default function Signin() {
                     <button
                       type="submit"
                       name="guest-register-btn"
-                      onClick={handleRegisterAsGuest}
+                      onClick={handleGuestRegister}
                       className="lg:text-md flex-grow bg-secondary-gray-6 py-1.5 text-sm shadow-primary active:bg-secondary-gray-8 active:text-secondary-gray-6 active:shadow-transparent"
                     >
                       Play as guest
                     </button>
                     <div className="flex space-x-1.5">
                       <Link
-                        className="lg:text-md active:shadow-transparent w-1/2 bg-secondary-gray-6 py-1.5 text-sm shadow-primary active:bg-secondary-gray-8 active:text-secondary-gray-6"
+                        className="lg:text-md w-1/2 bg-secondary-gray-6 py-1.5 text-sm shadow-primary active:bg-secondary-gray-8 active:text-secondary-gray-6 active:shadow-transparent"
                         to="signup"
                       >
                         Sign up
                       </Link>
                       <Link
-                        className="lg:text-md active:shadow-transparent w-1/2 bg-secondary-gray-6 py-1.5 text-sm shadow-primary active:bg-secondary-gray-8 active:text-secondary-gray-6"
+                        className="lg:text-md w-1/2 bg-secondary-gray-6 py-1.5 text-sm shadow-primary active:bg-secondary-gray-8 active:text-secondary-gray-6 active:shadow-transparent"
                         to="login"
                       >
                         Login
