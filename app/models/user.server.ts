@@ -1,4 +1,4 @@
-import type { Password, User } from "@prisma/client";
+import type { Match, Password, User } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 import { prisma } from "~/db.server";
@@ -79,4 +79,19 @@ export async function verifyLogin(
   const { password: _password, ...userWithoutPassword } = userWithPassword;
 
   return userWithoutPassword;
+}
+
+export async function getUserRegistrationListItemsForMatch(
+  userId: User["id"],
+  matchId: Match["id"]
+) {
+  return await prisma.registration.findMany({
+    where: {
+      matchId,
+      registrantId: userId
+    },
+    include: {
+      registrant: {}
+    }
+  });
 }

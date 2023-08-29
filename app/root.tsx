@@ -14,8 +14,8 @@ import type { Socket } from "socket.io-client";
 import { getUser } from "~/session.server";
 import stylesheet from "~/tailwind.css";
 import type { DefaultEventsMap } from "socket.io/dist/typed-events";
-import { connect } from "./ws.client";
 import { wsContext } from "./hooks/socket-context";
+import { connect } from "./ws.client";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },

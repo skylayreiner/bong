@@ -1,4 +1,4 @@
-import { type ActionArgs } from "@remix-run/node";
+import type { ActionArgs } from "@remix-run/node";
 import { Link, Outlet, useFetcher } from "@remix-run/react";
 import { PrimaryButton } from "~/components/buttons";
 import RulebookModal from "~/components/rulebook-modal";

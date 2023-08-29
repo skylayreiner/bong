@@ -70,16 +70,6 @@ export async function addRegistrant(id: Match["id"], particpantId: User["id"]) {
   }
 }
 
-export async function init(id: Match["id"]) {
-  return await prisma.match.update({
-    data: {
-      stage: "init"
-    },
-    where: { id },
-    include: { signups: {} }
-  });
-}
-
 export async function getMatch(id: Match["id"]) {
   return await prisma.match.findUnique({
     where: { id },
@@ -93,6 +83,33 @@ export async function getMatch(id: Match["id"]) {
           }
         }
       }
+    }
+  });
+}
+
+export async function updateMatchStage(
+  id: Match["id"],
+  stageUpdate: Match["stage"]
+) {
+  return await prisma.match.update({
+    where: { id },
+    data: {
+      stage: stageUpdate
+    },
+    select: {
+      seats: true,
+      rounds: true,
+      id: true,
+      signups: {
+        select: {
+          registrant: {
+            select: {
+              username: true
+            }
+          }
+        }
+      },
+      stage: true
     }
   });
 }
