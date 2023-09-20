@@ -15,14 +15,14 @@ export const action = async ({ request }: ActionArgs) => {
   if (!seats || !rounds) {
     return { error: "Data entry errors @ match settings config" };
   }
-  const match = await createMatch(seats, rounds, user.id, "pre");
+  const match = await createMatch(seats, rounds, user.id, user.username, "pre");
   if (!match || !match.id) return { error: "Create match failure" };
-  console.log(match);
-  return redirect(`/match/${match.id}/lobby`);
+  return redirect(`../../match/${match.id}/lobby`);
 };
 
-export default function Create() {
+export default function CreateRoute() {
   const [isOpen, setIsOpen] = useState(true);
+
   const navigate = useNavigate();
 
   function handleClose() {
@@ -61,7 +61,6 @@ export default function Create() {
 function CreateForm() {
   const fetcher = useFetcher();
   const [error, setError] = useState("");
-
   useEffect(() => {
     if (fetcher.data && fetcher.data["error"]) {
       console.log(fetcher.data);

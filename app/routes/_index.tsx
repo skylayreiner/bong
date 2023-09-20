@@ -1,11 +1,13 @@
 import { redirect, type LoaderArgs } from "@remix-run/node";
 import { getUser } from "~/session.server";
 
-export const loader = async ({ request }: LoaderArgs) => {
+/**
+ * Default "child" route for the entire application
+ * consider replacing this w/ title screen type content
+ */
+
+export async function loader({ request }: LoaderArgs) {
   const user = await getUser(request);
-  if (!user) return redirect("/signin");
-
-  return redirect("/home");
-};
-
-export default function Index() {}
+  if (!user) return redirect("signin");
+  return redirect("home");
+}

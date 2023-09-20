@@ -2,9 +2,13 @@ import { Dialog } from "@headlessui/react";
 import { redirect, type ActionArgs } from "@remix-run/node";
 import { Form, useFetcher, useNavigate } from "@remix-run/react";
 import type { ChangeEvent, FormEvent } from "react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { Socket } from "socket.io-client";
 import { SubmitButton, CancelButton, CloseButton } from "~/components/buttons";
-import { getMatchByKey, addRegistrant } from "~/models/match.server";
+import { wsContext } from "~/hooks/socket-context";
+import { getMatchById } from "~/models/match.server";
+import { updateUserAsPlayerOfMatch } from "~/models/user.server";
+
 import { requireUser } from "~/session.server";
 
 export const action = async ({ request }: ActionArgs) => {
@@ -14,21 +18,28 @@ export const action = async ({ request }: ActionArgs) => {
   if (!key) {
     return { data: { error: "Error: Data entry errors @ match key input" } };
   }
-  const match = await getMatchByKey(key);
+  const match = await getMatchById(key);
   if (!match || !match.id) {
     return { data: { error: "Error: No match was found for input key" } };
   }
-  if (match.signups.length === match.seats) {
+  if (match.players.length === match.seatLimit) {
     return {
       data: { error: "Error: Match w/ input key is full or in progress" }
     };
   }
-  await addRegistrant(match.id, user.id);
-  return redirect(`/match/${match.id}/lobby`);
+  if (match.stage !== "pre") {
+    throw new Error(
+      "Error @ match join: The match corresponding to input key has either already started or ended & cannot be joined"
+    );
+  }
+  await updateUserAsPlayerOfMatch(user.id, match.id, user.username);
+  // emitter.emit(EVENTS.LOBBY_CHANGED, Date.now());
+  return redirect(`../../match/${match.id}/lobby`);
 };
 
-export default function Join() {
+export default function JoinRoute() {
   const [isOpen, setIsOpen] = useState(true);
+
   const navigate = useNavigate();
 
   function handleClose() {
@@ -65,6 +76,7 @@ export default function Join() {
 
 function JoinForm() {
   const fetcher = useFetcher();
+
   const [error, setError] = useState("");
   const [value, setValue] = useState("");
 
@@ -77,8 +89,10 @@ function JoinForm() {
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
+
     const form = new FormData(e.target as HTMLFormElement);
     form.set("match-key", value);
+
     fetcher.submit(form, { method: "post", action: "." });
   }
 

@@ -76,7 +76,7 @@ export function generateRandomNumber(length: number) {
   return nums.join("");
 }
 export function generateGuestUsername(
-  tail: string = generateRandomNumber(10),
+  tail: string = generateRandomNumber(4),
   joinChar: string = "-"
 ) {
   return `guest${joinChar}${tail}`;

@@ -1,4 +1,5 @@
 import { createCookieSessionStorage, redirect } from "@remix-run/node";
+import { Params } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import type { User } from "~/models/user.server";
 import { getUserById } from "~/models/user.server";
@@ -30,6 +31,25 @@ export async function getUserId(
   const userId = session.get(USER_SESSION_KEY);
   return userId;
 }
+
+// export async function getMatches(request: Request) {
+//   const user = await getUser(request);
+//   if (!user || !user?.registrations) return [];
+//   const matches = await getMatchesByUserRegistrations(user.registrations);
+//   return matches;
+// }
+
+// export async function getMatchesByUserRegistrations(
+//   registrations: Registration[]
+// ) {
+//   const matches = [];
+//   for (const registration of registrations) {
+//     if (!registration.matchId) continue;
+//     const match = await getMatchById(registration.matchId);
+//     matches.push(match);
+//   }
+//   return matches;
+// }
 
 export async function getUser(request: Request) {
   const userId = await getUserId(request);
@@ -90,3 +110,7 @@ export async function logout(request: Request) {
     }
   });
 }
+
+// export async function getMatch(request, params) {
+
+// }

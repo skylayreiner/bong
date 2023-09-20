@@ -5,7 +5,6 @@ const { Server } = require("socket.io"); // and also require the socket.io modul
 const compression = require("compression");
 const morgan = require("morgan");
 const { createRequestHandler } = require("@remix-run/express");
-
 const MODE = process.env.NODE_ENV;
 const BUILD_DIR = path.join(process.cwd(), "server/build");
 
@@ -22,7 +21,18 @@ io.on("connection", (socket) => {
   // here you can do whatever you want with the socket of the client, in this
   // example I'm logging the socket.id of the client
   console.log(socket.id, "connected");
-  // // and I emit an event to the client called `event` with a simple message
+  socket.onAny((e) => {
+    console.log(e);
+  });
+  socket.on("match:join", (matchId) => {
+    io.to(matchId).emit("match:join", "join");
+    socket.join(matchId);
+  });
+  socket.on("match:start", (matchId) => {
+    io.to(matchId).emit("match:start", "start");
+  });
+
+  // // and I emit  an event to the client called `event` with a simple message
   // socket.emit("event", "connected!");
   // // and I start listening for the event `something`
   // socket.on("something", (data) => {
@@ -52,7 +62,10 @@ const port = process.env.PORT || 3000;
 
 // instead of using `app.listen` we use `httpServer.listen`
 httpServer.listen(port, () => {
-  console.log(`Express server listening on port ${port}`);
+  if (MODE === "development") {
+    console.log("http://localhost:3000/");
+  }
+  console.log(`Express server listening on port `);
 });
 
 ////////////////////////////////////////////////////////////////////////////////
