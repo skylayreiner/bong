@@ -28,7 +28,9 @@ export const links: LinksFunction = () => [
 ];
 
 export const loader = async ({ request }: LoaderArgs) => {
-  return json({ user: await getUser(request) });
+  return json({
+    user: await getUser(request)
+  });
 };
 
 export default function App() {
@@ -42,13 +44,6 @@ export default function App() {
       connection.close();
     };
   }, []);
-
-  useEffect(() => {
-    if (!socket) return;
-    socket.on("event", (data) => {
-      console.log(data);
-    });
-  }, [socket]);
 
   return (
     <html lang="en">

@@ -1,29 +1,37 @@
-import type { ActionArgs } from "@remix-run/node";
-import { Link, Outlet, useFetcher } from "@remix-run/react";
-import { PrimaryButton } from "~/components/buttons";
+import { Link, Outlet } from "@remix-run/react";
 import RulebookModal from "~/components/rulebook-modal";
-import { logout } from "~/session.server";
+import { useUser } from "~/utils";
+import { json, type LoaderArgs } from "@remix-run/node";
+import { getPlayerDataByUserId } from "~/models/user.server";
+import { requireUserId } from "~/session.server";
 
-export const action = async ({ request }: ActionArgs) => {
-  return await logout(request);
-};
+export async function loader({ request, params }: LoaderArgs) {
+  const userId = await requireUserId(request);
 
-export default function Home() {
-  const fetcher = useFetcher();
-
-  function handleLogout() {
-    fetcher.submit(null, { method: "post" });
-  }
+  return json({
+    playerData: await getPlayerDataByUserId(userId)
+  });
+}
+export default function HomeRoute() {
+  const user = useUser();
 
   return (
     <>
       <Outlet />
       <main className="relative min-h-screen bg-primary-green-6 sm:flex sm:items-center sm:justify-center">
         <div className="max-w-7xl bg-primary-green-6 sm:px-6 lg:px-8">
+          <div className="absolute left-2 top-2">
+            <text>{`${user.username}`}</text>
+          </div>
           <div className="absolute right-2 top-2 flex items-center justify-center">
-            <PrimaryButton handleClick={handleLogout}>
-              <p className="px-2">Logout</p>
-            </PrimaryButton>
+            <form action="/logout" method="post">
+              <button
+                type="submit"
+                className="lg:text-md bg-secondary-gray-6 p-1.5 text-sm shadow-primary active:bg-secondary-gray-8 active:text-secondary-gray-6 active:shadow-transparent"
+              >
+                Logout
+              </button>
+            </form>
           </div>
           <div className="h-[min(80vh,_120vw)] w-[min(80vh,_120vw)] rounded-full bg-primary-white pt-1 lg:h-[65vh] lg:w-[65vh] lg:pt-5">
             <div className="flex h-full flex-col items-center justify-center">
