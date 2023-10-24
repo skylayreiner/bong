@@ -1,5 +1,4 @@
 import { createCookieSessionStorage, redirect } from "@remix-run/node";
-import { Params } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import type { User } from "~/models/user.server";
 import { getUserById } from "~/models/user.server";
@@ -64,7 +63,7 @@ export async function getUser(request: Request) {
 export async function requireUserId(request: Request) {
   const userId = await getUserId(request);
   if (!userId) {
-    throw redirect(`/`);
+    throw redirect(`./signin`);
   }
   return userId;
 }
@@ -110,7 +109,3 @@ export async function logout(request: Request) {
     }
   });
 }
-
-// export async function getMatch(request, params) {
-
-// }

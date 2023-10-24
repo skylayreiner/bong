@@ -4,7 +4,7 @@
     "remix.env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "./server/index.js",
+    "server/index.ts",
     "app/seating-util.js"
   ],
   "compilerOptions": {

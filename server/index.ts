@@ -1,10 +1,11 @@
-const path = require("path");
-const express = require("express");
-const { createServer } = require("http"); // add this require
-const { Server } = require("socket.io"); // and also require the socket.io module
-const compression = require("compression");
-const morgan = require("morgan");
-const { createRequestHandler } = require("@remix-run/express");
+import path from "path";
+import express from "express";
+import { createServer } from "http"; // add this require
+import { Server } from "socket.io"; // and also require the socket.io module
+import compression from "compression";
+import morgan from "morgan";
+import { createRequestHandler } from "@remix-run/express";
+import { prisma } from "~/db.server";
 const MODE = process.env.NODE_ENV;
 const BUILD_DIR = path.join(process.cwd(), "server/build");
 
@@ -26,12 +27,15 @@ io.on("connection", (socket) => {
   });
   socket.on("match:join", (matchId) => {
     io.to(matchId).emit("match:join", "join");
+
     socket.join(matchId);
   });
   socket.on("match:start", (matchId) => {
     io.to(matchId).emit("match:start", "start");
   });
-
+  socket.on("match:leave", (matchId) => {
+    io.to(matchId).emit("match:leave", "leave");
+  });
   // // and I emit  an event to the client called `event` with a simple message
   // socket.emit("event", "connected!");
   // // and I start listening for the event `something`

@@ -11,11 +11,11 @@ import {
 } from "@remix-run/react";
 import { useState, useEffect } from "react";
 import type { Socket } from "socket.io-client";
+import { connect } from "socket.io-client";
+import type { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { getUser } from "~/session.server";
 import stylesheet from "~/tailwind.css";
-import type { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { wsContext } from "./hooks/socket-context";
-import { connect } from "./ws.client";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
@@ -27,13 +27,12 @@ export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : [])
 ];
 
-export const loader = async ({ request }: LoaderArgs) => {
-  return json({
-    user: await getUser(request)
-  });
-};
+export async function loader({ request }: LoaderArgs) {
+  return json({ user: await getUser(request) });
+}
 
 export default function App() {
+  // TODO: update default events map types
   let [socket, setSocket] =
     useState<Socket<DefaultEventsMap, DefaultEventsMap>>();
 

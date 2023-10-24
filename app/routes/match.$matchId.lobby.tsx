@@ -1,65 +1,21 @@
-import { redirect, type ActionArgs } from "@remix-run/node";
-import {
-  Form,
-  useFetcher,
-  useLoaderData,
-  useNavigate,
-  useRevalidator
-} from "@remix-run/react";
+import type { ActionArgs } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
+import { Form, useFetcher, useNavigate } from "@remix-run/react";
 import type { FormEvent } from "react";
-import { useContext, useEffect, useState } from "react";
-import type { Socket } from "socket.io-client";
-import CountdownOverlay from "~/components/overlays/countdown-overlay";
+import { useContext, useEffect } from "react";
 
 import { wsContext } from "~/hooks/socket-context";
-import { startGameWithMatch } from "~/models/match.server";
 import {
-  getPlayerData,
-  unregisterUserFromMatchByPlayerId
-} from "~/models/user.server";
-import { requireUserId } from "~/session.server";
+  initMatchRound,
+  randomlyGenerateMatchSeating,
+  startMatchById,
+  updateMatchOnStart,
+  updateRoundIdxByMatchId
+} from "~/models/match.server";
+import { deleteRegistration } from "~/models/registration.server";
+import { requireUser } from "~/session.server";
+import { useLobby, useRegistration } from "~/utils";
 
-export async function loader({ request, params }: ActionArgs) {
-  const matchId = params?.matchId;
-  if (!matchId) throw new Error(`No valid match found w/ url`);
-  const userId = await requireUserId(request);
-  const playerData = await getPlayerData(userId, matchId);
-  if (!playerData?.match) {
-    throw new Error("player not registered @ lobby error");
-  }
-  return playerData.match;
-}
-
-export async function action({ request, params }: ActionArgs) {
-  const matchId = params?.matchId;
-  const userId = await requireUserId(request);
-  if (!matchId) throw new Error(`No valid match found w/ url`);
-  const playerData = await getPlayerData(userId, matchId);
-  if (!playerData?.match) {
-    throw new Error("player not registered @ lobby error");
-  }
-  if (playerData?.match?.stage !== "pre") {
-    console.log("@lobby match not in pre stage");
-  }
-  const formData = await request.formData();
-  const type = formData.get("type");
-  if (type === "start") {
-    const match = await startGameWithMatch(playerData.match);
-
-    if (!match) throw new Error("Error occured @ start");
-
-    return match;
-  }
-  if (type === "leave") {
-    const res = await unregisterUserFromMatchByPlayerId(playerData.id);
-    if (!res) {
-      throw new Error(
-        "Error updating user matches @ match lobby on lobby leave"
-      );
-    }
-    return redirect("././");
-  }
-}
 // This is (to be removed) placeholder data 4 static development
 // const dummyParticipantsList = [
 //   {
@@ -75,56 +31,88 @@ export async function action({ request, params }: ActionArgs) {
 //     isHost: false
 //   }
 // ];
+
+// export async function loader({ request }: LoaderArgs) {
+//   return {};
+// }
+
+export async function action({ request, params }: ActionArgs) {
+  const matchId = params?.matchId;
+  if (!matchId) throw new Error(`No valid match found w/ url`);
+  const formData = await request.formData();
+  const type = formData.get("type");
+  const registrationId = String(formData.get("registrationId"));
+  if (!registrationId)
+    throw new Error("No registration valid id was found @ match lobby");
+  if (type === "start") {
+    const match = await startMatchById(matchId);
+    if (!match) throw new Error("Error occured @ start");
+    const seating = await randomlyGenerateMatchSeating(matchId);
+    if (!seating) throw new Error("Error occured @ start seating");
+    const round = await initMatchRound(matchId, "E");
+    const roundIdx = await updateRoundIdxByMatchId(matchId);
+    console.log(round, roundIdx);
+    return redirect("..");
+  }
+  if (type === "leave") {
+    const res = await deleteRegistration(registrationId);
+    if (!res) {
+      throw new Error(
+        "Error updating user matches @ match lobby on lobby leave"
+      );
+    }
+    return redirect("../../");
+  }
+  return new Error("error @ lobby form: unexpected type for form");
+}
+
 export default function LobbyRoute() {
-  const data = useLoaderData();
+  const registration = useRegistration();
+  const lobby = useLobby();
   const socket = useContext(wsContext);
   const fetcher = useFetcher();
-  const revalidator = useRevalidator();
-  const navigate = useNavigate();
 
-  const [isStarting, setIsStarting] = useState(false);
   useEffect(() => {
     if (socket) {
-      socket.timeout(5000).emit("match:join", data.id);
+      socket.timeout(5000).emit("match:join", registration.matchId);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    function onJoinEvent(socket: Socket) {
-      revalidator.revalidate();
-    }
-
-    function onStartEvent(socket: Socket) {
-      setIsStarting(true);
-      setTimeout(() => {
-        navigate("../room");
-      }, 10000);
-    }
-
-    if (socket) {
-      socket.on("match:join", onJoinEvent);
-      socket.on("match:start", onStartEvent);
-      return () => {
-        socket?.off("match:join", onJoinEvent);
-        socket?.off("match:start", onStartEvent);
-      };
-    }
-  }, [revalidator, navigate, socket]);
-
   function handleStart(e: FormEvent<HTMLButtonElement>) {
     e.preventDefault();
-    socket?.emit("match:start", data.id);
+    socket?.timeout(5000).emit("match:start", lobby.id);
     const submitType = e.currentTarget.value;
     const formData = new FormData();
     formData.set("type", submitType);
-    fetcher.submit(e.currentTarget);
+    formData.set("registrationId", registration.id);
+    fetcher.submit(e.currentTarget, { action: ".", method: "post" });
+  }
+
+  function handleLeave(e: FormEvent<HTMLButtonElement>) {
+    e.preventDefault();
+    socket?.timeout(5000).emit("match:leave", lobby.id);
+
+    const submitType = e.currentTarget.value;
+    const formData = new FormData();
+    formData.set("type", submitType);
+    formData.set("registrationId", registration.id);
+    fetcher.submit(e.currentTarget, { action: ".", method: "post" });
+  }
+
+  function isStartDisabled() {
+    if (lobby.Registrations.length >= 2 ? false : true) {
+      return true;
+    }
+    if (lobby.Registrations[0].userId !== registration.userId) {
+      return true;
+    }
+    return false;
   }
 
   return (
-    <div className="max-w-6xl bg-primary-green-6">
-      {isStarting && <CountdownOverlay />}
+    <div className="max-h-[80vh] max-w-6xl bg-primary-green-6">
       <div className="grid-rows-4 absolute inset-y-[18vh] grid grid-cols-5 md:inset-x-2 lg:inset-x-[20vw]">
         <div className="row-span-1 col-span-5 flex flex-col">
           {/*[Grid Layout] Header Contents*/}
@@ -132,7 +120,7 @@ export default function LobbyRoute() {
           <h1 className="mx-auto mb-2 mt-auto text-center text-4xl font-semibold uppercase">
             Match lobby
           </h1>
-          <CopyBar payload={data.id} />
+          <CopyBar payload={lobby.id} />
         </div>
         <div className="row-span-5 col-span-1 col-start-1 my-2 flex flex-col">
           {/* [Grid Layout] Left Sidebar Contents*/}
@@ -144,8 +132,8 @@ export default function LobbyRoute() {
               </p>
               {/* Sidebar List */}
               <ul className="ml-2 flex list-disc flex-col space-y-3 pl-3 text-sm">
-                <li>{`Rounds: ${data.rounds}`}</li>
-                <li>{`Max Seats: ${data.seatLimit}`}</li>
+                <li>{`Rounds: ${lobby.roundsCount}`}</li>
+                <li>{`Max Seats: ${lobby.seatLimit}`}</li>
                 <li>{`Mode: Casual`}</li>
                 <li>{`Turn Length: 8 sec`}</li>
               </ul>
@@ -172,9 +160,9 @@ export default function LobbyRoute() {
             className="row-span-4 mt-1.58 relative col-span-1"
           >
             <div className="absolute inset-x-1 inset-y-2 bg-primary-green-8">
-              {data?.players[idx]?.displayName && (
+              {lobby.Registrations[idx]?.registrantName && (
                 <RegistrantCard
-                  username={data.players[idx].displayName}
+                  username={lobby.Registrations[idx].registrantName}
                   isHost={idx === 0 ? true : false}
                 />
               )}
@@ -188,7 +176,6 @@ export default function LobbyRoute() {
           method="post"
           name="lobby-form"
           id="lobby-form"
-          action="."
         >
           <button
             type="submit"
@@ -197,7 +184,7 @@ export default function LobbyRoute() {
             form="lobby-form"
             onClick={(e) => handleStart(e)}
             className="h-10 w-1/3 bg-secondary-gray-6 text-primary-black shadow-primary brightness-95 disabled:bg-secondary-gray-8 disabled:text-secondary-gray-7 disabled:shadow-transparent"
-            disabled={data.players.length >= 2 ? false : true}
+            disabled={isStartDisabled()}
           >
             Start
           </button>
@@ -206,6 +193,7 @@ export default function LobbyRoute() {
             form="lobby-form"
             type="submit"
             value="leave"
+            onClick={(e) => handleLeave(e)}
             className="h-10 w-1/3 bg-primary-red-6 text-secondary-gray-1 shadow-primary active:bg-primary-red-8 active:text-primary-red-10 active:shadow-transparent"
           >
             Leave

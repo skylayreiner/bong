@@ -10,12 +10,15 @@ import { requireUser } from "~/session.server";
 export const action = async ({ request }: ActionArgs) => {
   const user = await requireUser(request);
   const formData = await request.formData();
-  const seats = Number(formData.get("seat-count"));
-  const rounds = Number(formData.get("round-count"));
-  if (!seats || !rounds) {
-    return { error: "Data entry errors @ match settings config" };
-  }
-  const match = await createMatch(seats, rounds, user.id, user.username, "pre");
+  const maxSeats = Number(formData.get("seat-limit"));
+  const roundsInGame = Number(formData.get("rounds-count"));
+  const match = await createMatch(
+    maxSeats,
+    roundsInGame,
+    user.id,
+    user.username
+  );
+  console.log(match, "match @ create");
   if (!match || !match.id) return { error: "Create match failure" };
   return redirect(`../../match/${match.id}/lobby`);
 };
@@ -82,13 +85,13 @@ function CreateForm() {
     >
       {error}
       <div className="container">
-        <label htmlFor="seat-count">Max Seats:</label>
+        <label htmlFor="seat-limit">Max Seats:</label>
         <select
           defaultValue={4}
           className="mx-1 bg-secondary-gray-6"
           typeof="number"
-          id="seat-count"
-          name="seat-count"
+          id="seat-limit"
+          name="seat-limit"
         >
           <option value={4}>4</option>
           <option value={3}>3</option>
@@ -96,12 +99,12 @@ function CreateForm() {
         </select>
       </div>
       <div className="container">
-        <label htmlFor="round-count"># of Rounds:</label>
+        <label htmlFor="rounds-count"># of Rounds:</label>
         <select
           defaultValue={20}
-          id="round-count"
+          id="rounds-count"
           typeof="number"
-          name="round-count"
+          name="rounds-count"
           className="mx-1 bg-secondary-gray-6"
         >
           <option value={20}>20</option>

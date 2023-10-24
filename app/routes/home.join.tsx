@@ -1,13 +1,10 @@
 import { Dialog } from "@headlessui/react";
 import { redirect, type ActionArgs } from "@remix-run/node";
 import { Form, useFetcher, useNavigate } from "@remix-run/react";
-import type { ChangeEvent, FormEvent } from "react";
-import { useContext, useEffect, useState } from "react";
-import { Socket } from "socket.io-client";
+import { useState, type ChangeEvent, type FormEvent, useEffect } from "react";
 import { SubmitButton, CancelButton, CloseButton } from "~/components/buttons";
-import { wsContext } from "~/hooks/socket-context";
 import { getMatchById } from "~/models/match.server";
-import { updateUserAsPlayerOfMatch } from "~/models/user.server";
+import { createRegistration } from "~/models/registration.server";
 
 import { requireUser } from "~/session.server";
 
@@ -22,18 +19,17 @@ export const action = async ({ request }: ActionArgs) => {
   if (!match || !match.id) {
     return { data: { error: "Error: No match was found for input key" } };
   }
-  if (match.players.length === match.seatLimit) {
+  if (match.Registrations.length === match.seatLimit) {
     return {
       data: { error: "Error: Match w/ input key is full or in progress" }
     };
   }
-  if (match.stage !== "pre") {
+  if (match.startTime) {
     throw new Error(
       "Error @ match join: The match corresponding to input key has either already started or ended & cannot be joined"
     );
   }
-  await updateUserAsPlayerOfMatch(user.id, match.id, user.username);
-  // emitter.emit(EVENTS.LOBBY_CHANGED, Date.now());
+  await createRegistration(user.id, user.username, match.id);
   return redirect(`../../match/${match.id}/lobby`);
 };
 

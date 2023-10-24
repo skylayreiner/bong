@@ -18,7 +18,6 @@ const MatchContext = createContext<undefined | any>(undefined);
 // }
 
 // export function MatchProvider({ children }: { children: ReactNode }) {
-
 //   const [state, dispatch] = useReducer(matchContextReducer);
 //   const value = { state, dispatch };
 //   return (

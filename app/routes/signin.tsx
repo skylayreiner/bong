@@ -46,6 +46,8 @@ export const action = async ({ request }: ActionArgs) => {
   };
 };
 
+
+
 export default function Signin() {
   const fetcher = useFetcher();
 
@@ -57,8 +59,8 @@ export default function Signin() {
     <main className="relative min-h-screen bg-primary-green-6 sm:flex sm:items-center sm:justify-center">
       <Outlet />
       <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-        <div className="bg-theme-base-green absolute inset-0 top-0 z-20 flex items-center justify-center overflow-hidden p-4">
-          <div className="text-theme-base-black m-10 flex h-full flex-col items-center justify-center font-sans">
+        <div className="absolute inset-0 top-0 z-20 flex items-center justify-center overflow-hidden p-4">
+          <div className="m-10 flex h-full flex-col items-center justify-center font-sans text-primary-black">
             <div className="h-[min(80vh,_120vw)] w-[min(80vh,_120vw)] rounded-full bg-primary-white pt-1 lg:h-[65vh] lg:w-[65vh] lg:pt-5">
               <div className="flex h-full flex-col items-center justify-center">
                 <img

@@ -40,35 +40,6 @@ async function seed() {
   //   }
   // });
 
-  const match = await prisma.match.create({
-    data: {
-      rounds: 20,
-      seatLimit: 4,
-      stage: "pre"
-    }
-  });
-
-  const player = await prisma.player.create({
-    data: {
-      user: {
-        connect: {
-          id: user.id
-        }
-      },
-      displayName: user.username,
-      match: {
-        connect: {
-          id: match.id
-        }
-      }
-    },
-    include: {
-      user: {},
-      match: {}
-    }
-  });
-  console.log(player);
-
   console.log(`Database has been seeded. 🌱`);
 }
 

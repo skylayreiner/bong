@@ -8,13 +8,12 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(cuid())
-  username  String    @unique
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  password  Password?
-  Note      Note[]
-  player    Player[]
+  id            String         @id @default(cuid())
+  username      String         @unique
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  password      Password?
+  registrations Registration[]
 }
 
 model Password {
@@ -23,93 +22,87 @@ model Password {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model Note {
-  id        String   @id @default(cuid())
-  title     String
-  body      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+model Registration {
+  id             String   @id @default(cuid())
+  User           User     @relation(fields: [userId], references: [id])
+  userId         String
+  registrantName String
+  matchId        String
+  createdAt      DateTime @default(now())
+  Match          Match    @relation(fields: [matchId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  Player         Player   @relation(fields: [playerId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  playerId       String   @unique
 }
 
 model Match {
-  id        String    @id @default(cuid())
-  seatLimit Int
-  rounds    Int
-  stage     String    @default("pre")
-  startTime DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  endTime   DateTime?
-  players   Player[]
-  table     Table?
-  round     Round?
-  Action    Action?
-}
-
-model Table {
-  id        String        @id @default(cuid())
-  match     Match         @relation(fields: [matchId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  matchId   String        @unique
-  deck      DeckCard[]
-  deckCount Int           @default(0)
-  seats     Seat[]
-  discards  DiscardCard[]
+  id            String         @id @default(cuid())
+  seatLimit     Int
+  roundsCount   Int
+  roundIdx      Int            @default(-1)
+  createdAt     DateTime       @default(now())
+  startTime     DateTime?
+  updatedAt     DateTime       @updatedAt
+  endTime       DateTime?
+  Registrations Registration[]
+  Seats         Seat[]
+  Rounds        Round[]
 }
 
 model Round {
-  id          String  @id @default(cuid())
-  match       Match   @relation(fields: [matchId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  matchId     String  @unique
-  turn        Turn?   @relation(fields: [turnId], references: [id])
-  turnId      String?
-  // setup --> playing --> encore? (post stop call) --> teardown
-  stage       String  @default("init")
-  // N S E W
-  startingPos String  @default("E")
+  id          String        @id @default(cuid())
+  match       Match         @relation(fields: [matchId], references: [id], onUpdate: Cascade)
+  matchId     String        @unique
+  startTime   DateTime      @default(now())
+  endTime     DateTime?
+  turns       Turn[]
+  startingPos String        @default("E")
+  deck        DeckCard[]
+  deckCount   Int           @default(0)
+  discards    DiscardCard[]
 }
 
 model Turn {
-  id        String    @id @default(cuid())
-  seat      Seat      @relation(fields: [seatId], references: [id])
-  seatId    String    @unique
-  phase     String    @default("draw")
-  startTime DateTime  @default(now())
-  endTime   DateTime?
-  round     Round[]
-  timeLimit Int
+  id         String    @id @default(cuid())
+  atPlayer   Player    @relation(fields: [atPlayerId], references: [id], onUpdate: Cascade)
+  atPlayerId String    @unique
+  startTime  DateTime  @default(now())
+  endTime    DateTime?
+  round      Round     @relation(fields: [roundId], references: [id], onUpdate: Cascade)
+  roundId    String
+  timeLimit  Int
+  action     Action[]
 }
 
 model Seat {
-  id         String @id @default(cuid())
-  occupant   Player @relation(fields: [occupantId], references: [id])
-  occupantId String @unique
-
-  cardCount Int     @default(0)
-  turn      Turn?
+  id         String  @id @default(cuid())
+  nametag    String
+  cardCount  Int     @default(0)
   // N S E W
-  position  String
-  table     Table?  @relation(fields: [tableId], references: [id])
-  tableId   String?
+  position   String
+  Match      Match   @relation(fields: [matchId], references: [id], onUpdate: Cascade)
+  matchId    String
+  occupant   Player?
+  occupantId String?
+  totalScore Int     @default(0)
+  lastScore  Int     @default(0)
 }
 
 model Player {
-  id          String     @id @default(cuid())
-  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      String
-  displayName String
-  match       Match      @relation(fields: [matchId], references: [id])
-  matchId     String
-  seat        Seat?
-  hand        HandCard[]
-  Action      Action[]
+  id             String        @id @default(cuid())
+  hand           HandCard[]
+  Actions        Action[]
+  Turn           Turn?
+  Seat           Seat?         @relation(fields: [seatId], references: [id], onUpdate: Cascade)
+  seatId         String?       @unique
+  Registration   Registration?
+  registrationId String?
 }
 
 model HandCard {
   id       String @id @default(cuid())
   value    Int
   cardType String
-  player   Player @relation(fields: [playerId], references: [id])
+  Player   Player @relation(fields: [playerId], references: [id])
   playerId String
 }
 
@@ -117,8 +110,8 @@ model DeckCard {
   id       String @id @default(cuid())
   value    Int
   cardType String
-  table    Table  @relation(fields: [tableId], references: [id])
-  tableId  String
+  round    Round  @relation(fields: [roundId], references: [id])
+  roundId  String
 }
 
 model Card {
@@ -131,21 +124,21 @@ model Card {
 
 model Action {
   id       String  @id @default(cuid())
-  player   Player? @relation(fields: [playerId], references: [id])
-  match    Match   @relation(fields: [matchId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  matchId  String  @unique
+  Player   Player? @relation(fields: [playerId], references: [id])
   playerId String?
   // Action types include (but not limited to) discard, draw, callout + [bong, banghaji, stop]
   type     String
   card     Card[]
+  turn     Turn    @relation(fields: [turnId], references: [id])
+  turnId   String
 }
 
 model DiscardCard {
   id             String @id @default(cuid())
   // N S E W
   originPosition String
-  Table          Table  @relation(fields: [tableId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  tableId        String
+  round          Round  @relation(fields: [roundId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  roundId        String
   value          Int
   cardType       String
 }

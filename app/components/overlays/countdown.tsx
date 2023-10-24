@@ -22,6 +22,7 @@ export default function CountdownOverlay() {
         open={isOpen}
         className="relative z-50 text-primary-white"
         onClose={() => setIsOpen(false)}
+        static={true}
       >
         <div className="fixed inset-0 mx-0 flex items-center justify-center p-4 backdrop-brightness-[.1]">
           <Dialog.Panel className="flex w-full max-w-sm flex-col justify-center text-sm lg:max-w-md lg:text-lg">
